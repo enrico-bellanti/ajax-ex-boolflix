@@ -26,7 +26,15 @@
      </ul>
      <!-- /lista films -->
 
-     <!-- template -->
+     <!-- barra di navigazione -->
+     <footer>
+       <ul class="nav_bar">
+
+       </ul>
+     </footer>
+     <!-- /barra di navigazione -->
+
+     <!-- template film -->
       <script id="movie-template" type="text/x-handlebars-template">
         <li class="movie_info">
           <h2>Titolo: {{title}}</h2>
@@ -35,7 +43,15 @@
           <p>voto: {{vote_average}}</p>
         </li>
       </script>
-      <!-- /template -->
+      <!-- /template film -->
+
+     <!-- template page -->
+      <script id="page-template" type="text/x-handlebars-template">
+        <li class="page_label">
+          <span>{{page_numb}}</span>
+        </li>
+      </script>
+      <!-- /template page -->
 
 
      <script src="js/script.js" charset="utf-8"></script>

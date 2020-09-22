@@ -5,7 +5,8 @@ $(document).ready(function() {
     // prendo valore input
     var searchMovie = $("#input_movie").val();
     // stampa risultati
-    printResults(searchMovie);
+    var totalPages = printResults(searchMovie);
+    printPageLabel(totalPages);
     // ripulisci input
     $("#input_movie").val("");
   });
@@ -17,7 +18,10 @@ $(document).ready(function() {
       // prendo valore input
       var searchMovie = $("#input_movie").val();
       // stampa risultati
-      printResults(searchMovie);
+      var totalPages = printResults(searchMovie);
+      console.log("click invio"+totalPages);
+
+      printPageLabel(totalPages);
       // ripulisci input
       $("#input_movie").val("");
     }
@@ -52,6 +56,8 @@ function printResults(searchKey) {
      "method":"GET",
      "success":function (data) {
        var movieResults = data.results;
+       var pageNumb = data.total_pages;
+       console.log("valore alla chiamata"+pageNumb)
        for (var i = 0; i < movieResults.length; i++) {
          // compilo il template
          var context = {
@@ -62,13 +68,25 @@ function printResults(searchKey) {
          };
          var html = movieTemplate(context);
          $(".movie_list").append(html);
-
-       }
-
+        }
+       console.log("return nella chiamata"+pageNumb);
+        return pageNumb;
      },
      "error":function (err) {
        alert("E avvenuto un errore. "+ err);
      }
   });
+}
 
+// funzione per stampare etichetta numero pagina
+function printPageLabel(pages) {
+  var source = $("#page-template").html();
+  var pageTemplate = Handlebars.compile(source);
+  for (var i = 0; i < pages; i++) {
+    var context = {
+      "page_numb": i
+    };
+    var html = pageTemplate(context);
+    $(".nav_bar").append(html);
+  }
 }

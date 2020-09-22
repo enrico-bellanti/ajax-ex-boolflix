@@ -25,3 +25,10 @@ header{
   width: 60px;
   height: 30px;
 }
+
+.nav_bar{
+  display: flex;
+}
+.page_label{
+  border: 1px solid #000;
+}

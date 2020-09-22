@@ -1,15 +1,15 @@
 $(document).ready(function() {
-  $("#search_button").click(function() {
-    // cancello il risultato precedente
-    $(".movie_info").remove();
-    // prendo valore input
-    var searchMovie = $("#input_movie").val();
-    // stampa risultati
-    var totalPages = printResults(searchMovie);
-    printPageLabel(totalPages);
-    // ripulisci input
-    $("#input_movie").val("");
-  });
+  // $("#search_button").click(function() {
+  //   // cancello il risultato precedente
+  //   $(".movie_info").remove();
+  //   // prendo valore input
+  //   var searchMovie = $("#input_movie").val();
+  //   // stampa risultati
+  //   var totalPages = printResults(searchMovie);
+  //   printPageLabel(totalPages);
+  //   // ripulisci input
+  //   $("#input_movie").val("");
+  // });
 
   $("#input_movie").keydown(function(event){
     if (event.which == 13) {
@@ -21,7 +21,7 @@ $(document).ready(function() {
       var totalPages = printResults(searchMovie);
       console.log("click invio"+totalPages);
 
-      printPageLabel(totalPages);
+      printPageLabel(7);
       // ripulisci input
       $("#input_movie").val("");
     }
@@ -57,7 +57,6 @@ function printResults(searchKey) {
      "success":function (data) {
        var movieResults = data.results;
        var pageNumb = data.total_pages;
-       console.log("valore alla chiamata"+pageNumb)
        for (var i = 0; i < movieResults.length; i++) {
          // compilo il template
          var context = {
@@ -69,7 +68,7 @@ function printResults(searchKey) {
          var html = movieTemplate(context);
          $(".movie_list").append(html);
         }
-       console.log("return nella chiamata"+pageNumb);
+        console.log("numero pagine nella chiamata "+pageNumb);
         return pageNumb;
      },
      "error":function (err) {

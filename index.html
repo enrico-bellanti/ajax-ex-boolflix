@@ -11,18 +11,32 @@
    </head>
    <body>
 
+     <!-- barra di ricerca -->
+     <header>
+       <nav class="search_bar">
+         <input id="input_movie" type="text" name="" value="">
+         <button id="search_button" type="button" name="button">Cerca</button>
+       </nav>
+     </header>
+     <!-- /barra di ricerca -->
+
+    <!-- lista films -->
      <ul class="movie_list">
 
      </ul>
+     <!-- /lista films -->
 
+     <!-- template -->
       <script id="movie-template" type="text/x-handlebars-template">
         <li class="movie_info">
-          <h2>{{title}}</h2>
-          <h4>{{original_title}}</h4>
-          <p>{{original_language}}</p>
-          <p>{{vote_average}}</p>
+          <h2>Titolo: {{title}}</h2>
+          <h4>Titolo Originale: {{original_title}}</h4>
+          <p>lingua originale: {{original_language}}</p>
+          <p>voto: {{vote_average}}</p>
         </li>
       </script>
+      <!-- /template -->
+
 
      <script src="js/script.js" charset="utf-8"></script>
    </body>

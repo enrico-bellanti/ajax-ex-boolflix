@@ -1,6 +1,41 @@
 $(document).ready(function() {
-  var searchMovie = "star wars";
+  $("#search_button").click(function() {
+    // cancello il risultato precedente
+    $(".movie_info").remove();
+    // prendo valore input
+    var searchMovie = $("#input_movie").val();
+    // stampa risultati
+    printResults(searchMovie);
+    // ripulisci input
+    $("#input_movie").val("");
+  });
 
+  $("#input_movie").keydown(function(event){
+    if (event.which == 13) {
+      // cancello il risultato precedente
+      $(".movie_info").remove();
+      // prendo valore input
+      var searchMovie = $("#input_movie").val();
+      // stampa risultati
+      printResults(searchMovie);
+      // ripulisci input
+      $("#input_movie").val("");
+    }
+  });
+
+
+
+
+
+});
+// end document ready
+
+
+// funzioni
+
+// stampa a a schermo i risultati
+function printResults(searchKey) {
+  // var searchMovie = "star wars";
   var source = $("#movie-template").html();
   var movieTemplate = Handlebars.compile(source);
 
@@ -11,7 +46,7 @@ $(document).ready(function() {
      "data":{
        "api_key": "faa82c855e9e700015c133bf3942bd8f",
        "language": "it-IT",
-       "query": searchMovie,
+       "query": searchKey,
        "page": ""
      },
      "method":"GET",
@@ -36,5 +71,4 @@ $(document).ready(function() {
      }
   });
 
-});
-// end document ready
+}

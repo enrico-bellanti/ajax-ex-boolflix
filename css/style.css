@@ -1,34 +1,43 @@
-* {
- box-sizing: border-box;
- margin: 0;
- padding: 0;
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.movie_list{
-  margin-left: 20px;
-}
-header{
-  display: flex;
-  height: 80px;
-  border-bottom: 2px solid green;
-  background-color: lightgreen;
-}
 .search_bar{
-  margin: auto;
+  width: 100%;
+  background-color: black;
+  height: 100px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-#input_movie{
-  width: 300px;
+.search_bar input{
+  width: 200px;
   height: 30px;
-  padding: 5px;
 }
-#search_button{
-  width: 60px;
+.search_bar button{
   height: 30px;
+  width: 50px;
 }
 
-.nav_bar{
-  display: flex;
+#movies-list{
+  margin: 50px;
 }
-.page_label{
-  border: 1px solid #000;
+
+.movie{
+  margin-bottom: 20px;
+}
+
+.movies-page-list {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+.page_numb{
+  padding: 20px;
+  border: 1px solid black;
+  text-align: center;
+  cursor: pointer;
 }

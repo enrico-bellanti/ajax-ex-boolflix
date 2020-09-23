@@ -41,3 +41,12 @@
   text-align: center;
   cursor: pointer;
 }
+
+/* TEMPLATE STARS */
+.star_list{
+  display: flex;
+  list-style: none;
+}
+.star i{
+  color: yellow;
+}

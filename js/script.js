@@ -111,15 +111,34 @@ function renderMovies(obj) {
 
   for(var i = 0; i < results.length; i++){
 
+    var vote = convert(results[i].vote_average);
     var context = {
       "title": results[i].title,
       "original_title": results[i].original_title,
       "original_language" : results[i].original_language,
-      "vote_average": results[i].vote_average
+      "vote_average": results[i].vote_average,
     };
 
     var html = template(context);
     $("#movies-list").append(html);
+    $(".movie:nth-child("+(i+1)+") .star_list").append(vote);
   }
+
+}
+
+// funzione che converte voto in 5 stelline
+function convert(vote) {
+  // converto il voto da 1 a 10 in da 1 a 5 e arrotondo per eccesso
+  var newVote = Math.ceil(vote / 2);
+
+  //preparo il template
+  var source = $("#stars-template").html();
+  var template = Handlebars.compile(source);
+  var html = template();
+  var starVote = "";
+  for (var i = 0; i < newVote; i++) {
+    starVote = starVote + html;
+  }
+  return starVote;
 
 }

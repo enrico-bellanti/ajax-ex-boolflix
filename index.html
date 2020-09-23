@@ -19,7 +19,7 @@
   </header>
   <!-- /searchbar -->
 
-  <ul id="movies-list">
+  <ul id="results-list">
 
   </ul>
 
@@ -33,16 +33,30 @@
   <!-- template film -->
   <script id="movies-template" type="text/x-handlebars-template">
     <li class="movie">
-      <h1>Titolo : {{title}}</h1>
-      <h3>Titolo originale: {{original_title}}</h3>
-      <p>Lingua originale: {{original_language}}</p>
+      <h1>Movie: {{title}}{{name}}</h1>
+      <h4>Titolo originale: {{original_title}}{{original_name}}</h4>
+      <img src="https://www.countryflags.io/{{original_language}}/flat/16.png">
       <p>Media dei voti: {{vote_average}}</p>
       <ul class="star_list">
-        
+        {{{star_vote}}}
       </ul>
     </li>
   </script>
   <!-- /template film -->
+
+  <!-- template series -->
+  <script id="series-template" type="text/x-handlebars-template">
+    <li class="serie">
+      <h1>Serie Tv: {{name}}</h1>
+      <h4>Titolo originale: {{original_name}}</h4>
+      <img src="https://www.countryflags.io/{{original_language}}/flat/16.png">
+      <p>Media dei voti: {{vote_average}}</p>
+      <ul class="star_list">
+        {{{star_vote}}}
+      </ul>
+    </li>
+  </script>
+  <!-- /template series -->
 
   <!-- template pagine -->
   <script id="pages-template" type="text/x-handlebars-template">

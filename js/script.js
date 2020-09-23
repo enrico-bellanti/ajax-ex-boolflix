@@ -12,7 +12,7 @@ $(document).ready(function(){
       // cancello il risultato precedente
       resetResult();
       // stampo a schermo il nuovo risultato
-      getMovies(searchMovie);
+      getResults(searchMovie);
     }
   });
 
@@ -30,27 +30,27 @@ $(document).ready(function(){
         // cancello il risultato precedente
         resetResult();
         // stampo a schermo il nuovo risultato
-        getMovies(searchMovie);
+        getResults(searchMovie);
       }
     }
 
   });
 
 
-  //click sul quadratino prende il valore di data-page e passiamo il valore alla funzione getMovies
-  $(document).on("click", ".page_numb", function(){
-    //seleziono con il this cioè quel quadratino che vado a selezionare
-    var actualPage = $(this).attr("data-page");
-    // cancello il risultato precedente
-    resetResult();
-    // printa a schermo risultato pagina selezionata
-    getMovies(lastSearch, actualPage);
-  });
+  //click sul quadratino prende il valore di data-page e passiamo il valore alla funzione getResults
+  // $(document).on("click", ".page_numb", function(){
+  //   //seleziono con il this cioè quel quadratino che vado a selezionare
+  //   var actualPage = $(this).attr("data-page");
+  //   // cancello il risultato precedente
+  //   resetResult();
+  //   // printa a schermo risultato pagina selezionata
+  //   getResults(lastSearch, actualPage);
+  // });
 
 });
 
 //Printa il risultato della risposta a schermo con i film e il numero di pagine
-function getMovies(searchMovies, page){
+function getResults(searchMovies){
 
   var api_key = "e985f53e1e87b07c7fd1095468f025a0";
 
@@ -60,13 +60,30 @@ function getMovies(searchMovies, page){
       "data": {
         "api_key" : api_key,
         "language": "it-IT",
-        "page": page,
+        "page": "",
         "query": searchMovies
       },
       "method": "GET",
       "success": function (data) {
         renderMovies(data);
-        renderPages(data);
+      },
+      "error": function (err) {
+        alert("E' avvenuto un errore. " + err);
+      }
+    }
+  );
+  $.ajax(
+    {
+      "url": "https://api.themoviedb.org/3/search/tv",
+      "data": {
+        "api_key" : api_key,
+        "language": "it-IT",
+        "page": "",
+        "query": searchMovies
+      },
+      "method": "GET",
+      "success": function (data) {
+        renderSeries(data);
       },
       "error": function (err) {
         alert("E' avvenuto un errore. " + err);
@@ -75,28 +92,10 @@ function getMovies(searchMovies, page){
   );
 }
 
-//stampo il numero di pagine della chiamata
-function renderPages(obj){
-  var totalPages = obj.total_pages;
-  //preparo il template
-  var source = $("#pages-template").html();
-  var pageTemplate = Handlebars.compile(source);
-
-  //ciclo i numeri delle pagine prodotte dal risutato della query e compilo il context
-  for(var i = 1; i <= totalPages; i++){
-    var context = {
-      "page": i
-    }
-
-    var html = pageTemplate(context);
-    //stampo nel DOM
-    $(".movies-page-list").append(html);
-  }
-}
 
 // resetto la casella di ricerca input
 function resetResult() {
-  $("#movies-list").html("");
+  $("#results-list").html("");
   $(".movies-page-list").html("");
 }
 
@@ -110,18 +109,47 @@ function renderMovies(obj) {
 
 
   for(var i = 0; i < results.length; i++){
-
-    var vote = convert(results[i].vote_average);
+    // prendo il voto e lo converto in stelle in html
+    var starVote = convert(results[i].vote_average);
+    var originalLanguage = converFlagIso(results[i].original_language);
     var context = {
       "title": results[i].title,
       "original_title": results[i].original_title,
-      "original_language" : results[i].original_language,
+      "original_language" : originalLanguage,
       "vote_average": results[i].vote_average,
+      "star_vote": starVote
     };
 
     var html = template(context);
-    $("#movies-list").append(html);
-    $(".movie:nth-child("+(i+1)+") .star_list").append(vote);
+    $("#results-list").append(html);
+
+  }
+
+}
+// renderizza il template del film
+function renderSeries(obj) {
+  console.log(obj);
+  //preparo il template
+  var source = $("#series-template").html();
+  var template = Handlebars.compile(source);
+  //array del risultato
+  var results = obj.results;
+
+  for(var i = 0; i < results.length; i++){
+    // prendo il voto e lo converto in stelle
+    var starVote = convert(results[i].vote_average);
+    var originalLanguage = converFlagIso(results[i].original_language);
+    var context = {
+      "name": results[i].name,
+      "original_name": results[i].original_name,
+      "original_language" : originalLanguage,
+      "vote_average": results[i].vote_average,
+      "star_vote": starVote
+    };
+    console.log(starVote);
+    console.log(context);
+    var html = template(context);
+    $("#results-list").append(html);
   }
 
 }
@@ -139,6 +167,18 @@ function convert(vote) {
   for (var i = 0; i < newVote; i++) {
     starVote = starVote + html;
   }
-  return starVote;
 
+  return starVote;
+}
+
+// controlla se il valore della ligua corrisponde alla bandiera
+function converFlagIso(lang) {
+  if (lang == "en") {
+    return "gb";
+  } else if (lang == "ja") {
+    return "jp";
+  } else if (lang == "zh") {
+    return "cn";
+  }
+  return lang;
 }

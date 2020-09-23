@@ -16,3 +16,14 @@
 //     $(".movies-page-list").append(html);
 //   }
 // }
+
+
+//click sul quadratino prende il valore di data-page e passiamo il valore alla funzione getResults
+// $(document).on("click", ".page_numb", function(){
+//   //seleziono con il this cioè quel quadratino che vado a selezionare
+//   var actualPage = $(this).attr("data-page");
+//   // cancello il risultato precedente
+//   resetResult();
+//   // printa a schermo risultato pagina selezionata
+//   getResults(lastSearch, actualPage);
+// });

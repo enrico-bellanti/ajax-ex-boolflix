@@ -1,17 +1,19 @@
 $(document).ready(function(){
+  // salvo una variabile globale per l'ultima ricerca fatta
   var lastSearch = "";
   // funzione cerca al click sul bottone
   $(".search_button").click(function(){
     // salvo il valore dell'input ricerca
     var searchMovie = $(".search_input").val();
+    // controllo che la casella input non sia vuota
     if (searchMovie != "") {
-      // salvo la ricerca in una variabile globale
+      // salvo la ricerca nella variabile globale
       lastSearch = $(".search_input").val();
       // resetto la casella input
       $(".search_input").val("");
       // cancello il risultato precedente
       resetResult();
-      // stampo a schermo il nuovo risultato
+      // stampo a schermo il risultato
       getResults(searchMovie);
     }
   });
@@ -23,44 +25,33 @@ $(document).ready(function(){
       // salvo il valore dell'input ricerca
       var searchMovie = $(".search_input").val();
       if (searchMovie != "") {
-        // salvo la ricerca in una variabile globale
+        // salvo la ricerca nella variabile globale
         lastSearch = $(".search_input").val();
         // resetto la casella input
         $(".search_input").val("");
         // cancello il risultato precedente
         resetResult();
-        // stampo a schermo il nuovo risultato
+        // stampo a schermo il risultato
         getResults(searchMovie);
       }
     }
 
   });
 
-
-  //click sul quadratino prende il valore di data-page e passiamo il valore alla funzione getResults
-  // $(document).on("click", ".page_numb", function(){
-  //   //seleziono con il this cioè quel quadratino che vado a selezionare
-  //   var actualPage = $(this).attr("data-page");
-  //   // cancello il risultato precedente
-  //   resetResult();
-  //   // printa a schermo risultato pagina selezionata
-  //   getResults(lastSearch, actualPage);
-  // });
-
 });
+// end document ready
 
-//Printa il risultato della risposta a schermo con i film e il numero di pagine
+//Printa il risultato della risposta
 function getResults(searchMovies){
 
   var api_key = "e985f53e1e87b07c7fd1095468f025a0";
-
+  // chiamata oer la ricerca films
   $.ajax(
     {
       "url": "https://api.themoviedb.org/3/search/movie",
       "data": {
         "api_key" : api_key,
         "language": "it-IT",
-        "page": "",
         "query": searchMovies
       },
       "method": "GET",
@@ -72,13 +63,13 @@ function getResults(searchMovies){
       }
     }
   );
+  // chiamata per la ricerca series
   $.ajax(
     {
       "url": "https://api.themoviedb.org/3/search/tv",
       "data": {
         "api_key" : api_key,
         "language": "it-IT",
-        "page": "",
         "query": searchMovies
       },
       "method": "GET",
@@ -107,11 +98,11 @@ function renderMovies(obj) {
   //array del risultato
   var results = obj.results;
 
-
+// ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
-    // prendo il voto e lo converto in stelle in html
+    // prendo i dati che mi servono per renderizzare il template
     var starVote = convert(results[i].vote_average);
-    var originalLanguage = converFlagIso(results[i].original_language);
+    var originalLanguage = results[i].original_language;
     var context = {
       "title": results[i].title,
       "original_title": results[i].original_title,
@@ -126,7 +117,7 @@ function renderMovies(obj) {
   }
 
 }
-// renderizza il template del film
+// renderizza il template dela series
 function renderSeries(obj) {
   console.log(obj);
   //preparo il template
@@ -138,7 +129,7 @@ function renderSeries(obj) {
   for(var i = 0; i < results.length; i++){
     // prendo il voto e lo converto in stelle
     var starVote = convert(results[i].vote_average);
-    var originalLanguage = converFlagIso(results[i].original_language);
+    var originalLanguage = results[i].original_language;
     var context = {
       "name": results[i].name,
       "original_name": results[i].original_name,
@@ -146,8 +137,6 @@ function renderSeries(obj) {
       "vote_average": results[i].vote_average,
       "star_vote": starVote
     };
-    console.log(starVote);
-    console.log(context);
     var html = template(context);
     $("#results-list").append(html);
   }
@@ -169,16 +158,4 @@ function convert(vote) {
   }
 
   return starVote;
-}
-
-// controlla se il valore della ligua corrisponde alla bandiera
-function converFlagIso(lang) {
-  if (lang == "en") {
-    return "gb";
-  } else if (lang == "ja") {
-    return "jp";
-  } else if (lang == "zh") {
-    return "cn";
-  }
-  return lang;
 }

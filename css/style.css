@@ -22,35 +22,38 @@
   width: 50px;
 }
 
-#movies-list{
-  margin: 50px;
+#results-list{
+  padding: 20px;
+  list-style: none;
 }
+
 
 .flag_img {
   width: 20px;
 }
 
-.movie{
+.result{
   margin-bottom: 20px;
 }
 
-.movies-page-list {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-}
-.page_numb{
-  padding: 20px;
-  border: 1px solid black;
-  text-align: center;
-  cursor: pointer;
-}
 
 /* TEMPLATE STARS */
+
+
 .star_list{
   display: flex;
   list-style: none;
 }
 .star i{
   color: yellow;
+}
+
+.type{
+  width: 185px;
+}
+.type.movies{
+  background-color: yellow;
+}
+.type.series{
+  background-color: purple;
 }

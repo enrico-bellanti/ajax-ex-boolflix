@@ -4,9 +4,9 @@ $(document).ready(function(){
   // funzione cerca al click sul bottone
   $(".search_button").click(function(){
     // salvo il valore dell'input ricerca
-    var searchMovie = $(".search_input").val();
+    var searchInput = $(".search_input").val();
     // controllo che la casella input non sia vuota
-    if (searchMovie != "") {
+    if (searchInput != "") {
       // salvo la ricerca nella variabile globale
       lastSearch = $(".search_input").val();
       // resetto la casella input
@@ -14,7 +14,7 @@ $(document).ready(function(){
       // cancello il risultato precedente
       resetResult();
       // stampo a schermo il risultato
-      getResults(searchMovie);
+      getResults(searchInput);
     }
   });
 
@@ -23,8 +23,8 @@ $(document).ready(function(){
 
     if(event.which == 13){
       // salvo il valore dell'input ricerca
-      var searchMovie = $(".search_input").val();
-      if (searchMovie != "") {
+      var searchInput = $(".search_input").val();
+      if (searchInput != "") {
         // salvo la ricerca nella variabile globale
         lastSearch = $(".search_input").val();
         // resetto la casella input
@@ -32,7 +32,7 @@ $(document).ready(function(){
         // cancello il risultato precedente
         resetResult();
         // stampo a schermo il risultato
-        getResults(searchMovie);
+        getResults(searchInput);
       }
     }
 
@@ -42,7 +42,7 @@ $(document).ready(function(){
 // end document ready
 
 //Printa il risultato della risposta
-function getResults(searchMovies){
+function getResults(inputString){
 
   var api_key = "e985f53e1e87b07c7fd1095468f025a0";
   // chiamata oer la ricerca films
@@ -52,7 +52,7 @@ function getResults(searchMovies){
       "data": {
         "api_key" : api_key,
         "language": "it-IT",
-        "query": searchMovies
+        "query": inputString
       },
       "method": "GET",
       "success": function (data) {
@@ -70,7 +70,7 @@ function getResults(searchMovies){
       "data": {
         "api_key" : api_key,
         "language": "it-IT",
-        "query": searchMovies
+        "query": inputString
       },
       "method": "GET",
       "success": function (data) {
@@ -87,8 +87,9 @@ function getResults(searchMovies){
 
 // renderizza il template del film
 function renderResults(type, obj) {
+  console.log(type);
   //preparo il template
-  var source = $("#movies-template").html();
+  var source = $("#result-template").html();
   var template = Handlebars.compile(source);
   //array del risultato
   var results = obj.results;
@@ -104,9 +105,9 @@ function renderResults(type, obj) {
     }
     // prendo i dati che mi servono per renderizzare il template
     var starVote = printStars(results[i].vote_average);
-
     var context = {
-      "type": type,
+      "type": jsUcfirst(type),
+      "type_data": type,
       "title": title,
       "original_title": originalTitle,
       "original_language" : results[i].original_language,
@@ -171,4 +172,8 @@ function printStars(vote) {
 // resetto la casella di ricerca input
 function resetResult() {
   $("#results-list").html("");
+}
+
+function jsUcfirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }

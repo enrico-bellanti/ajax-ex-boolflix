@@ -27,10 +27,11 @@
   <!-- TEMPLATES -->
 
   <!-- template film -->
-  <script id="movies-template" type="text/x-handlebars-template">
-    <li class="movie">
+  <script id="result-template" type="text/x-handlebars-template">
+    <li class="result">
       <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
-      <h1>{{tipe}}: {{title}}</h1>
+      <h4 class="type {{type_data}}">{{type}}</h4>
+      <h1>{{title}}</h1>
       <h4>Titolo originale: {{original_title}}</h4>
       <h4>Lingua originale: <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
       <p>Media dei voti: {{vote_average}}</p>

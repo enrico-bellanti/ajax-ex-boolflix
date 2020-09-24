@@ -56,7 +56,7 @@ function getResults(searchMovies){
       },
       "method": "GET",
       "success": function (data) {
-        renderMovies(data);
+        renderResults("movies", data);
       },
       "error": function (err) {
         alert("E' avvenuto un errore. " + err);
@@ -74,7 +74,7 @@ function getResults(searchMovies){
       },
       "method": "GET",
       "success": function (data) {
-        renderSeries(data);
+        renderResults("series", data);
       },
       "error": function (err) {
         alert("E' avvenuto un errore. " + err);
@@ -84,30 +84,34 @@ function getResults(searchMovies){
 }
 
 
-// resetto la casella di ricerca input
-function resetResult() {
-  $("#results-list").html("");
-  $(".movies-page-list").html("");
-}
 
 // renderizza il template del film
-function renderMovies(obj) {
+function renderResults(type, obj) {
   //preparo il template
   var source = $("#movies-template").html();
   var template = Handlebars.compile(source);
   //array del risultato
   var results = obj.results;
-
+  var title, originalTitle;
 // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
+    if (type == "series") {
+      title = results[i].name;
+      originalTitle = results[i].original_name;
+    } else if (type == "movies") {
+      title = results[i].title;
+      originalTitle = results[i].original_title;
+    }
     // prendo i dati che mi servono per renderizzare il template
-    var starVote = convert(results[i].vote_average);
-    var originalLanguage = results[i].original_language;
+    var starVote = printStars(results[i].vote_average);
+
     var context = {
-      "title": results[i].title,
-      "original_title": results[i].original_title,
-      "original_language" : originalLanguage,
+      "type": type,
+      "title": title,
+      "original_title": originalTitle,
+      "original_language" : results[i].original_language,
       "vote_average": results[i].vote_average,
+      "poster": results[i].poster_path,
       "star_vote": starVote
     };
 
@@ -117,45 +121,54 @@ function renderMovies(obj) {
   }
 
 }
-// renderizza il template dela series
-function renderSeries(obj) {
-  console.log(obj);
-  //preparo il template
-  var source = $("#series-template").html();
-  var template = Handlebars.compile(source);
-  //array del risultato
-  var results = obj.results;
 
-  for(var i = 0; i < results.length; i++){
-    // prendo il voto e lo converto in stelle
-    var starVote = convert(results[i].vote_average);
-    var originalLanguage = results[i].original_language;
-    var context = {
-      "name": results[i].name,
-      "original_name": results[i].original_name,
-      "original_language" : originalLanguage,
-      "vote_average": results[i].vote_average,
-      "star_vote": starVote
-    };
-    var html = template(context);
-    $("#results-list").append(html);
-  }
-
-}
 
 // funzione che converte voto in 5 stelline
-function convert(vote) {
-  // converto il voto da 1 a 10 in da 1 a 5 e arrotondo per eccesso
-  var newVote = Math.ceil(vote / 2);
+function printStars(vote) {
+  // porta il voto da 1 a 5
+  var newVote = vote / 2;
+  // prendi l'intero
+  var voteMath = Math.floor(newVote);
+  // dammi il decimale
+  var decimal = (newVote - voteMath).toFixed(2);
 
-  //preparo il template
+  // fai copia template
   var source = $("#stars-template").html();
   var template = Handlebars.compile(source);
-  var html = template();
-  var starVote = "";
-  for (var i = 0; i < newVote; i++) {
-    starVote = starVote + html;
-  }
+  var typeStar;
+  var htmlStars = "";
+  // inizia a ciclare le stelline
+  // PIENA: <i class="fas fa-star"></i>
+  // MEZZA: <i class="fas fa-star-half-alt"></i>
+  // VUOTA: <i class="far fa-star"></i>
+  for (var i = 0; i < 5; i++) {
+    // voto = 3.6
+    if (i < voteMath) {
+      typeStar = "fas fa-star";
+    }else if (i == voteMath) {
+      if (decimal < 0.25) {
+        typeStar = "far fa-star";
+      }else if (decimal > 0.25 && decimal < 0.75) {
+        typeStar = "fas fa-star-half-alt";
+      }else {
+        typeStar = "fas fa-star";
+      }
+    } else {
+      typeStar = "far fa-star";
+    }
 
-  return starVote;
+    // riempi template stella
+    var context = {
+      "type_star": typeStar,
+    };
+
+    var html = template(context);
+    htmlStars += html;
+  }
+  return htmlStars;
+}
+
+// resetto la casella di ricerca input
+function resetResult() {
+  $("#results-list").html("");
 }

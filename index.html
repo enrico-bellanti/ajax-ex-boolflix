@@ -23,19 +23,16 @@
 
   </ul>
 
-  <footer id="movies-page">
-    <ul class="movies-page-list">
-
-    </ul>
-  </footer>
 
   <!-- TEMPLATES -->
+
   <!-- template film -->
   <script id="movies-template" type="text/x-handlebars-template">
     <li class="movie">
-      <h1>Movie: {{title}}{{name}}</h1>
-      <h4>Titolo originale: {{original_title}}{{original_name}}</h4>
-      <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100">
+      <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
+      <h1>{{tipe}}: {{title}}</h1>
+      <h4>Titolo originale: {{original_title}}</h4>
+      <h4>Lingua originale: <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
       <p>Media dei voti: {{vote_average}}</p>
       <ul class="star_list">
         {{{star_vote}}}
@@ -44,32 +41,10 @@
   </script>
   <!-- /template film -->
 
-  <!-- template series -->
-  <script id="series-template" type="text/x-handlebars-template">
-    <li class="serie">
-      <h1>Serie Tv: {{name}}</h1>
-      <h4>Titolo originale: {{original_name}}</h4>
-      <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100">
-      <p>Media dei voti: {{vote_average}}</p>
-      <ul class="star_list">
-        {{{star_vote}}}
-      </ul>
-    </li>
-  </script>
-  <!-- /template series -->
-
-  <!-- template pagine -->
-  <script id="pages-template" type="text/x-handlebars-template">
-    <li class="page_numb" data-page="{{page}}">
-      <span>{{page}}</span>
-    </li>
-  </script>
-  <!-- /template pagine -->
-
   <!-- template stelle -->
   <script id="stars-template" type="text/x-handlebars-template">
     <li class="star">
-      <span><i class="fas fa-star"></i></span>
+      <span><i class="{{{type_star}}}"></i></span>
     </li>
   </script>
   <!-- /template stelle -->

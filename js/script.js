@@ -14,7 +14,8 @@ $(document).ready(function(){
       // cancello il risultato precedente
       resetResult();
       // stampo a schermo il risultato
-      getResults(searchInput);
+      getMovies(searchInput);
+      getSeries(searchInput);
     }
   });
 
@@ -32,7 +33,8 @@ $(document).ready(function(){
         // cancello il risultato precedente
         resetResult();
         // stampo a schermo il risultato
-        getResults(searchInput);
+        getMovies(searchInput);
+        getSeries(searchInput);
       }
     }
 
@@ -42,39 +44,48 @@ $(document).ready(function(){
 // end document ready
 
 //Printa il risultato della risposta
-function getResults(inputString){
-
-  var api_key = "e985f53e1e87b07c7fd1095468f025a0";
+function getMovies(textSearch) {
   // chiamata oer la ricerca films
   $.ajax(
     {
       "url": "https://api.themoviedb.org/3/search/movie",
       "data": {
-        "api_key" : api_key,
+        "api_key" : "e985f53e1e87b07c7fd1095468f025a0",
         "language": "it-IT",
-        "query": inputString
+        "query": textSearch
       },
       "method": "GET",
       "success": function (data) {
-        renderResults("movies", data);
+        if (data.total_results != 0) {
+          renderResults("movies", data);
+        }else {
+          alert("non e' stato trovato alcun films");
+        }
       },
       "error": function (err) {
         alert("E' avvenuto un errore. " + err);
       }
     }
   );
+
+}
+function getSeries(textSearch){
   // chiamata per la ricerca series
   $.ajax(
     {
       "url": "https://api.themoviedb.org/3/search/tv",
       "data": {
-        "api_key" : api_key,
+        "api_key" : "e985f53e1e87b07c7fd1095468f025a0",
         "language": "it-IT",
-        "query": inputString
+        "query": textSearch
       },
       "method": "GET",
       "success": function (data) {
-        renderResults("series", data);
+        if (data.total_results != 0) {
+          renderResults("series", data);
+        }else {
+          alert("non e' stata trovata alcuna series");
+        }
       },
       "error": function (err) {
         alert("E' avvenuto un errore. " + err);
@@ -87,7 +98,6 @@ function getResults(inputString){
 
 // renderizza il template del film
 function renderResults(type, obj) {
-  console.log(type);
   //preparo il template
   var source = $("#result-template").html();
   var template = Handlebars.compile(source);
@@ -96,6 +106,7 @@ function renderResults(type, obj) {
   var title, originalTitle;
 // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
+    // controlla se che tipo di risultato
     if (type == "series") {
       title = results[i].name;
       originalTitle = results[i].original_name;
@@ -103,6 +114,7 @@ function renderResults(type, obj) {
       title = results[i].title;
       originalTitle = results[i].original_title;
     }
+
     // prendo i dati che mi servono per renderizzare il template
     var starVote = printStars(results[i].vote_average);
     var context = {
@@ -113,7 +125,8 @@ function renderResults(type, obj) {
       "original_language" : results[i].original_language,
       "vote_average": results[i].vote_average,
       "poster": results[i].poster_path,
-      "star_vote": starVote
+      "star_vote": starVote,
+      "overview": results[i].overview
     };
 
     var html = template(context);
@@ -174,6 +187,7 @@ function resetResult() {
   $("#results-list").html("");
 }
 
+// capitalizza il primo carattere
 function jsUcfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

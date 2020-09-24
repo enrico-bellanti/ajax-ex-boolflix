@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <title>BoolFlix</title>
@@ -12,16 +13,21 @@
 
   <!-- searchbar -->
   <header>
-    <div class="search_bar">
-      <input class="search_input" type="text" name="" value="" placeholder="cerca film">
-      <button class="search_button" type="button" name="button">Cerca</button>
+    <div class="header_container">
+      <div class="logo"><span>BOOLFLIX</span></div>
+      <div class="search_bar">
+        <input class="search_input" type="text" name="" value="" placeholder="cerca film">
+        <button class="search_button" type="button" name="button">Cerca</button>
+      </div>
     </div>
   </header>
   <!-- /searchbar -->
+  <main>
+    <ul id="results-list">
 
-  <ul id="results-list">
+    </ul>
+  </main>
 
-  </ul>
 
 
   <!-- TEMPLATES -->
@@ -29,15 +35,20 @@
   <!-- template film -->
   <script id="result-template" type="text/x-handlebars-template">
     <li class="result">
-      <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
-      <h4 class="type {{type_data}}">{{type}}</h4>
-      <h1>{{title}}</h1>
-      <h4>Titolo originale: {{original_title}}</h4>
-      <h4>Lingua originale: <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
-      <p>Media dei voti: {{vote_average}}</p>
-      <ul class="star_list">
-        {{{star_vote}}}
-      </ul>
+      <div class="result_img">
+        <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="">
+      </div>
+      <div class="result_info">
+        <h1>{{title}}</h1>
+        <h4>Titolo originale: {{original_title}}</h4>
+        <h4>Lingua originale: <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
+        <p>Media dei voti: {{vote_average}}</p>
+        <ul class="star_list">
+          {{{star_vote}}}
+        </ul>
+        <h4 class="type {{type_data}}">{{type}}</h4>
+        <p class="overview">{{overview}}</p>
+      </div>
     </li>
   </script>
   <!-- /template film -->

@@ -36,7 +36,13 @@
   <script id="result-template" type="text/x-handlebars-template">
     <li class="result">
       <div class="result_img">
-        <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="">
+        <div class="entry">
+          {{#if isPoster}}
+          <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="">
+          {{else}}
+          <div class="cover_poster">{{title}}</div>
+          {{/if}}
+        </div>
       </div>
       <div class="result_info">
         <h1>{{title}}</h1>

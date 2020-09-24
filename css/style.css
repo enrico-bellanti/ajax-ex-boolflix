@@ -79,9 +79,18 @@ body{
   transition: 0.4s;
   pointer-events: none;
 }
-
 .result:hover .result_img{
   opacity: 0;
+}
+.cover_poster{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 342px;
+  height: 513px;
+  background-color: #000;
+  line-height: 513px;
+  text-align: center;
 }
 
 .flag_img {
@@ -99,7 +108,6 @@ body{
 
 /* type */
 .type{
-
   margin: 10px 0;
 }
 .type.movies{

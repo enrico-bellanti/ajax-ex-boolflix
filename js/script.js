@@ -117,6 +117,7 @@ function renderResults(type, obj) {
 
     // prendo i dati che mi servono per renderizzare il template
     var starVote = printStars(results[i].vote_average);
+    var poster = results[i].poster_path;
     var context = {
       "type": jsUcfirst(type),
       "type_data": type,
@@ -124,7 +125,8 @@ function renderResults(type, obj) {
       "original_title": originalTitle,
       "original_language" : results[i].original_language,
       "vote_average": results[i].vote_average,
-      "poster": results[i].poster_path,
+      "isPoster": isPoster(poster),
+      "poster": poster,
       "star_vote": starVote,
       "overview": results[i].overview
     };
@@ -190,4 +192,13 @@ function resetResult() {
 // capitalizza il primo carattere
 function jsUcfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// controlla se e' presente il poster o no
+function isPoster(poster) {
+  var isPoster;
+  if(poster == null) {
+    return isPoster = false;
+  }
+  return isPoster = true;
 }

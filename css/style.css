@@ -76,7 +76,7 @@ body{
   top: 0;
   right: 0;
   opacity: 1;
-  transition: 0.4s;
+  transition: 0.6s;
   pointer-events: none;
 }
 .result:hover .result_img{
@@ -88,9 +88,10 @@ body{
   right: 0;
   width: 342px;
   height: 513px;
+  padding: 100px 25px;
   background-color: #000;
-  line-height: 513px;
   text-align: center;
+  font-size: 30px;
 }
 
 .flag_img {

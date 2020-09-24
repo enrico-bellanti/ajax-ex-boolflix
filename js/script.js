@@ -32,9 +32,16 @@ $(document).ready(function(){
         $(".search_input").val("");
         // cancello il risultato precedente
         resetResult();
-        // stampo a schermo il risultato
-        getMovies(searchInput);
-        getSeries(searchInput);
+        // stampo a schermo il risultato e salvo il valore della funzione
+        var movieResults, seriesResults;
+        movieResults =  getMovies(searchInput);
+        seriesResults = getSeries(searchInput);
+        console.log(movieResults);
+        console.log(seriesResults);
+
+        if (movieResults == false && seriesResults == false) {
+          printNoResults("prova");
+        }
       }
     }
 
@@ -59,7 +66,7 @@ function getMovies(textSearch) {
         if (data.total_results != 0) {
           renderResults("movies", data);
         }else {
-          alert("non e' stato trovato alcun films");
+          return false;
         }
       },
       "error": function (err) {
@@ -84,7 +91,7 @@ function getSeries(textSearch){
         if (data.total_results != 0) {
           renderResults("series", data);
         }else {
-          alert("non e' stata trovata alcuna series");
+          return false;
         }
       },
       "error": function (err) {
@@ -201,4 +208,15 @@ function isPoster(poster) {
     return isPoster = false;
   }
   return isPoster = true;
+}
+// funzione che stampa a schermo messaggio d'errore
+function printNoResults(search) {
+  var source = $("#no-results-template").html();
+  var errorTemplate = Handlebars.compile(source);
+  var context = {
+    "last_search": search,
+  };
+  var html = errorTemplate(context);
+
+
 }

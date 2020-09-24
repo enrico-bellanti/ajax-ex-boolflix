@@ -36,13 +36,11 @@
   <script id="result-template" type="text/x-handlebars-template">
     <li class="result">
       <div class="result_img">
-        <div class="entry">
           {{#if isPoster}}
-          <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="">
+            <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="">
           {{else}}
-          <div class="cover_poster">{{title}}</div>
+            <div class="cover_poster">{{title}}</div>
           {{/if}}
-        </div>
       </div>
       <div class="result_info">
         <h1>{{title}}</h1>
@@ -66,6 +64,21 @@
     </li>
   </script>
   <!-- /template stelle -->
+
+  <!-- template messaggio d'errore -->
+  <script id="no-results-template" type="text/x-handlebars-template">
+      <li id="no_results">
+        <p>Nessun risultato per la tua ricerca di "{{last_search}}".</p>
+        <p>Suggerimenti:</p>
+        <ul>
+          <li>Prova con parole chiave diverse</li>
+          <li>Cerchi un film o un programma TV?</li>
+          <li>Prova a usare il titolo di un film o programma TV oppure il nome di un attore o di un regista</li>
+          <li>Prova con un genere, per esempio Commedia, Romantici, Sport o Dramma</li>
+        </ul>
+      </li>
+   </script>
+  <!-- /template messaggio d'errore -->
 
   <!-- /TEMPLATES -->
 

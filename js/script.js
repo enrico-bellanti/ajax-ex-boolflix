@@ -38,7 +38,18 @@ $(document).ready(function(){
   });
 
   // funzione che filtra il Genere
-  $("#select_genre option").click(function () {
+  // $("#select_genre option").click(function () {
+  //   var genreSelect = $(this).val();
+  //   console.log(genreSelect);
+  //   filterGenre = genreSelect;
+  //   console.log(filterGenre);
+  //   console.log(lastResult);
+  //   resetResult();
+  //   getIds("movie", lastResult);
+  // });
+
+
+  $("#select_genre").change(function(){
     var genreSelect = $(this).val();
     console.log(genreSelect);
     filterGenre = genreSelect;
@@ -46,6 +57,7 @@ $(document).ready(function(){
     console.log(lastResult);
     resetResult();
     getIds("movie", lastResult);
+
   });
 
 });

@@ -11,8 +11,8 @@ $(document).ready(function(){
       // cancello il risultato precedente
       resetResult();
       // stampo a schermo il risultato
-      getResults("movie", searchInput);
-      getResults("tv", searchInput);
+      getIds("movie", searchInput);
+      // getIds("tv", searchInput);
     }
   });
 
@@ -26,20 +26,15 @@ $(document).ready(function(){
         // cancello il risultato precedente
         resetResult();
         // stampo a schermo il risultato e salvo il valore della funzione
-        getResults("movie", searchInput);
-        getResults("tv", searchInput);
-
-
+        getIds("movie", searchInput);
+        // getIds("tv", searchInput);
       }
     }
-
   });
-
 });
 // end document ready
 
-//Printa il risultato della risposta
-function getResults(type, textSearch) {
+function getIds(type, searchInput) {
   var urlCall = "https://api.themoviedb.org/3/search/" + type;
   // chiamata oer la ricerca films
   $.ajax(
@@ -48,66 +43,69 @@ function getResults(type, textSearch) {
       "data": {
         "api_key" : "e985f53e1e87b07c7fd1095468f025a0",
         "language": "it-IT",
-        "query": textSearch
+        "query": searchInput
       },
       "method": "GET",
-      "success": function (data) {
-        totalResults[type] = data.total_results;
-        renderResults(type, data);
+      "success": function (obj) {
+        totalResults[type] = obj.total_results;
+        // controllo su i risultati
+        if (totalResults.movie === 0 && totalResults.tv === 0) {
+            printNoResults(type);
+        } else {
+          renderResults(type, obj);
+        }
+
       },
       "error": function (err) {
         alert("E' avvenuto un errore. " + err);
       }
     }
   );
-
 }
-
 
 
 // renderizza il template del film
 function renderResults(type, obj) {
-  if (totalResults.movie === 0 && totalResults.tv === 0) {
-    printNoResults(type);
-  }
-  //preparo il template
-  var source = $("#result-template").html();
-  var template = Handlebars.compile(source);
-  //array del risultato
+
   var results = obj.results;
-  var title, originalTitle;
-// ciclo l'array della risposta
+  var id;
+  // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
-    // controlla se che tipo di risultato
-    if (type == "tv") {
-      title = results[i].name;
-      originalTitle = results[i].original_name;
-    } else if (type == "movie") {
-      title = results[i].title;
-      originalTitle = results[i].original_title;
-    }
+    id = results[i].id;
+    // faccio unìaltra chiamata per ottenere i dettagli
+    $.ajax(
+      {
+        "url":"https://api.themoviedb.org/3/movie/"+id+"?api_key=faa82c855e9e700015c133bf3942bd8f",
+        "method":"GET",
+        "success": function (details) {
+          // compilo il context
+          var context = {
+            "type_label": jsUcfirst(type),
+            "type_class": type,
+            "title": details.name || details.title,
+            "original_title": details.original_name || details.original_title,
+            "original_language" : details.original_language,
+            "vote_average": details.vote_average,
+            "isPoster": isPoster(details.poster_path),
+            "poster": details.poster_path,
+            "star_vote": printStars(details.vote_average),
+            "overview": details.overview,
+            "genre": ""
+          };
 
-    // prendo i dati che mi servono per renderizzare il template
-    var starVote = printStars(results[i].vote_average);
-    var poster = results[i].poster_path;
-    var context = {
-      "type": jsUcfirst(type),
-      "type_data": type,
-      "title": title,
-      "original_title": originalTitle,
-      "original_language" : results[i].original_language,
-      "vote_average": results[i].vote_average,
-      "isPoster": isPoster(poster),
-      "poster": poster,
-      "star_vote": starVote,
-      "overview": results[i].overview
-    };
+          //preparo il template e lo compilo con il context
+          var source = $("#result-template").html();
+          var template = Handlebars.compile(source);
+          var html = template(context);
+          $("#results-list").append(html);
 
-    var html = template(context);
-    $("#results-list").append(html);
-
+        },
+        "error":function (err) {
+          alert("E avvenuto un errore. "+ err);
+        }
+    });
+    // end call
   }
-
 }
 
 
@@ -120,23 +118,20 @@ function printStars(vote) {
   // dammi il decimale
   var decimal = (newVote - voteMath).toFixed(2);
 
-  // fai copia template
-  var source = $("#stars-template").html();
-  var template = Handlebars.compile(source);
+  // inizia a ciclare le stelline
   var typeStar;
   var htmlStars = "";
-  // inizia a ciclare le stelline
-  // PIENA: <i class="fas fa-star"></i>
-  // MEZZA: <i class="fas fa-star-half-alt"></i>
-  // VUOTA: <i class="far fa-star"></i>
   for (var i = 0; i < 5; i++) {
     // voto = 3.6
     if (i < voteMath) {
+      // stella piena
       typeStar = "fas fa-star";
     }else if (i == voteMath) {
       if (decimal < 0.25) {
+        // stella meta
         typeStar = "far fa-star";
       }else if (decimal > 0.25 && decimal < 0.75) {
+        // stella vuota
         typeStar = "fas fa-star-half-alt";
       }else {
         typeStar = "fas fa-star";
@@ -150,6 +145,9 @@ function printStars(vote) {
       "type_star": typeStar,
     };
 
+    // fai copia template
+    var source = $("#stars-template").html();
+    var template = Handlebars.compile(source);
     var html = template(context);
     htmlStars += html;
   }
@@ -164,7 +162,6 @@ function resetResult() {
   $("#results-list").html("");
   // resetto eventuali errori a video
   $("#error-list").html("");
-
 }
 
 // capitalizza il primo carattere
@@ -172,7 +169,7 @@ function jsUcfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// controlla se e' presente il poster o no
+// controlla se e' presente il poster
 function isPoster(poster) {
   var isPoster;
   if(poster == null) {
@@ -180,6 +177,7 @@ function isPoster(poster) {
   }
   return isPoster = true;
 }
+
 // funzione che stampa a schermo messaggio d'errore
 function printNoResults(category) {
   var source = $("#no-results-template").html();
@@ -189,5 +187,4 @@ function printNoResults(category) {
   };
   var html = errorTemplate(context);
   $("#error-list").append(html);
-
 }

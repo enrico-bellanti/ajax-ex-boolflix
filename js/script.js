@@ -1,5 +1,7 @@
 // variabili globali
 var totalResults = {};
+var genresResults = {};
+var filterGenre = "Family";
 // inizio document ready
 $(document).ready(function(){
   // funzione cerca al click sul bottone
@@ -50,7 +52,7 @@ function getIds(type, searchInput) {
         totalResults[type] = obj.total_results;
         // controllo su i risultati
         if (totalResults.movie === 0 && totalResults.tv === 0) {
-            printNoResults(type);
+          printNoResults(type);
         } else {
           renderResults(type, obj);
         }
@@ -68,7 +70,7 @@ function getIds(type, searchInput) {
 function renderResults(type, obj) {
 
   var results = obj.results;
-  var id, callType;
+  var id;
   // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
     id = results[i].id;
@@ -78,8 +80,20 @@ function renderResults(type, obj) {
         "url":"https://api.themoviedb.org/3/"+type+"/"+id+"?api_key=faa82c855e9e700015c133bf3942bd8f",
         "method":"GET",
         "success": function (details) {
+
+
+          var listgGen = details.genres;
+          var visible = "";
+          for (var i = 0; i < listgGen.length; i++) {
+            if (listgGen[i].name == filterGenre) {
+              visible = "filter_on";
+            }
+          }
+
           // compilo il context
           var context = {
+            "id": details.id,
+            "filter_on": visible,
             "type_label": jsUcfirst(type),
             "type_class": type,
             "title": details.name || details.title,
@@ -92,6 +106,8 @@ function renderResults(type, obj) {
             "overview": details.overview,
             "genres": getGenres(details.genres)
           };
+
+
 
           //preparo il template e lo compilo con il context
           var source = $("#result-template").html();
@@ -153,6 +169,17 @@ function printStars(vote) {
   }
   return htmlStars;
 }
+
+// filtra per genere
+// function filterGenre(details) {
+//   var listgGen = details.genres;
+//   for (var i = 0; i < listgGen.length; i++) {
+//     if (listgGen[i].name == filterGenre) {
+//       return "filter_on";
+//     }
+//   }
+//   return "";
+// }
 
 // resetto la casella di ricerca input
 function resetResult() {

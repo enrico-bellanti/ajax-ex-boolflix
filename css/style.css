@@ -50,11 +50,15 @@ body{
 
 /* template */
 .result{
+  display: none;
   position: relative;
   width: 342px;
   height: 513px;
   margin: 20px;
   background-color: #000;
+}
+.result.filter_on{
+  display: block;
 }
 
 .result_info{

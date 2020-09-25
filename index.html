@@ -39,7 +39,7 @@
 
   <!-- template film -->
   <script id="result-template" type="text/x-handlebars-template">
-    <li class="result">
+    <li class="result {{filter_on}}" data-id="{{id}}">
       <div class="result_img">
           {{#if isPoster}}
             <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="">

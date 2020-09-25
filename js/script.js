@@ -1,6 +1,7 @@
 // variabili globali
 var totalResults = {};
 var genresResults = {};
+var lastResult;
 var filterGenre = "Family";
 // inizio document ready
 $(document).ready(function(){
@@ -8,6 +9,7 @@ $(document).ready(function(){
   $(".search_button").click(function(){
     // salvo il valore dell'input ricerca
     var searchInput = $(".search_input").val();
+    lastResult = searchInput;
     // controllo che la casella input non sia vuota
     if (searchInput != "") {
       // cancello il risultato precedente
@@ -24,6 +26,7 @@ $(document).ready(function(){
     if(event.which == 13){
       // salvo il valore dell'input ricerca
       var searchInput = $(".search_input").val();
+      lastResult = searchInput;
       if (searchInput != "") {
         // cancello il risultato precedente
         resetResult();
@@ -33,6 +36,18 @@ $(document).ready(function(){
       }
     }
   });
+
+  // funzione che filtra il Genere
+  $("#select_genre option").click(function () {
+    var genreSelect = $(this).val();
+    console.log(genreSelect);
+    filterGenre = genreSelect;
+    console.log(filterGenre);
+    console.log(lastResult);
+    resetResult();
+    getIds("movie", lastResult);
+  });
+
 });
 // end document ready
 

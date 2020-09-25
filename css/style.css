@@ -24,6 +24,11 @@ body{
   width: 120px;
 }
 
+#select_genre{
+  height: 30px;
+  padding-left: 5px;
+}
+
 .search_bar input{
   width: 200px;
   height: 30px;

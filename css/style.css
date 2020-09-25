@@ -20,9 +20,8 @@ body{
   padding: 0 30px;
   background-color: black;
 }
-.logo{
-  color: #e00712;
-  font-size: 24px;
+.logo img{
+  width: 120px;
 }
 
 .search_bar input{
@@ -35,15 +34,18 @@ body{
   width: 50px;
 }
 
-
+/* main */
+.results-container{
+  padding: 20px 0;
+}
 #results-list{
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   width: 100%;
-  padding: 20px;
   list-style: none;
 }
+
 
 
 /* template */
@@ -82,17 +84,20 @@ body{
 .result:hover .result_img{
   opacity: 0;
 }
-.cover_poster{
+.cover_no_poster{
   position: absolute;
   top: 0;
   right: 0;
   width: 342px;
   height: 513px;
-  padding: 100px 25px;
+  padding: 200px 25px;
   background-color: #000;
   text-align: center;
   font-size: 30px;
-}
+  background: #182933;
+  background: -moz-radial-gradient(center, #182933 0%, #182933 0%, #000000 100%);
+  background: -webkit-radial-gradient(center, #182933 0%, #182933 0%, #000000 100%);
+  background: radial-gradient(ellipse at center, #182933 0%, #182933 0%, #000000 100%);}
 
 .flag_img {
   width: 20px;
@@ -111,10 +116,25 @@ body{
 .type{
   margin: 10px 0;
 }
-.type.movies{
+.type.movie{
   background-color: yellow;
   color: #000;
 }
-.type.series{
+.type.tv{
   background-color: purple;
+}
+
+/* template no results */
+.no_results{
+  margin: 20px 0;
+}
+.no_result_text{
+  width: 50%;
+  margin: auto;
+}
+.no_result_text p{
+  margin: 15px 0;
+}
+.list_solutions{
+  padding-inline-start: 40px;
 }

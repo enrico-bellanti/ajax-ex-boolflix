@@ -1,21 +1,18 @@
+// variabili globali
+var totalResults = {};
+// inizio document ready
 $(document).ready(function(){
-  // salvo una variabile globale per l'ultima ricerca fatta
-  var lastSearch = "";
   // funzione cerca al click sul bottone
   $(".search_button").click(function(){
     // salvo il valore dell'input ricerca
     var searchInput = $(".search_input").val();
     // controllo che la casella input non sia vuota
     if (searchInput != "") {
-      // salvo la ricerca nella variabile globale
-      lastSearch = $(".search_input").val();
-      // resetto la casella input
-      $(".search_input").val("");
       // cancello il risultato precedente
       resetResult();
       // stampo a schermo il risultato
-      getMovies(searchInput);
-      getSeries(searchInput);
+      getResults("movie", searchInput);
+      getResults("tv", searchInput);
     }
   });
 
@@ -26,22 +23,13 @@ $(document).ready(function(){
       // salvo il valore dell'input ricerca
       var searchInput = $(".search_input").val();
       if (searchInput != "") {
-        // salvo la ricerca nella variabile globale
-        lastSearch = $(".search_input").val();
-        // resetto la casella input
-        $(".search_input").val("");
         // cancello il risultato precedente
         resetResult();
         // stampo a schermo il risultato e salvo il valore della funzione
-        var movieResults, seriesResults;
-        movieResults =  getMovies(searchInput);
-        seriesResults = getSeries(searchInput);
-        console.log(movieResults);
-        console.log(seriesResults);
+        getResults("movie", searchInput);
+        getResults("tv", searchInput);
 
-        if (movieResults == false && seriesResults == false) {
-          printNoResults("prova");
-        }
+
       }
     }
 
@@ -51,11 +39,12 @@ $(document).ready(function(){
 // end document ready
 
 //Printa il risultato della risposta
-function getMovies(textSearch) {
+function getResults(type, textSearch) {
+  var urlCall = "https://api.themoviedb.org/3/search/" + type;
   // chiamata oer la ricerca films
   $.ajax(
     {
-      "url": "https://api.themoviedb.org/3/search/movie",
+      "url": urlCall,
       "data": {
         "api_key" : "e985f53e1e87b07c7fd1095468f025a0",
         "language": "it-IT",
@@ -63,11 +52,8 @@ function getMovies(textSearch) {
       },
       "method": "GET",
       "success": function (data) {
-        if (data.total_results != 0) {
-          renderResults("movies", data);
-        }else {
-          return false;
-        }
+        totalResults[type] = data.total_results;
+        renderResults(type, data);
       },
       "error": function (err) {
         alert("E' avvenuto un errore. " + err);
@@ -75,36 +61,15 @@ function getMovies(textSearch) {
     }
   );
 
-}
-function getSeries(textSearch){
-  // chiamata per la ricerca series
-  $.ajax(
-    {
-      "url": "https://api.themoviedb.org/3/search/tv",
-      "data": {
-        "api_key" : "e985f53e1e87b07c7fd1095468f025a0",
-        "language": "it-IT",
-        "query": textSearch
-      },
-      "method": "GET",
-      "success": function (data) {
-        if (data.total_results != 0) {
-          renderResults("series", data);
-        }else {
-          return false;
-        }
-      },
-      "error": function (err) {
-        alert("E' avvenuto un errore. " + err);
-      }
-    }
-  );
 }
 
 
 
 // renderizza il template del film
 function renderResults(type, obj) {
+  if (totalResults.movie === 0 && totalResults.tv === 0) {
+    printNoResults(type);
+  }
   //preparo il template
   var source = $("#result-template").html();
   var template = Handlebars.compile(source);
@@ -114,10 +79,10 @@ function renderResults(type, obj) {
 // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
     // controlla se che tipo di risultato
-    if (type == "series") {
+    if (type == "tv") {
       title = results[i].name;
       originalTitle = results[i].original_name;
-    } else if (type == "movies") {
+    } else if (type == "movie") {
       title = results[i].title;
       originalTitle = results[i].original_title;
     }
@@ -193,7 +158,13 @@ function printStars(vote) {
 
 // resetto la casella di ricerca input
 function resetResult() {
+  // resetto la casella input
+  $(".search_input").val("");
+  // resetto la ricerca
   $("#results-list").html("");
+  // resetto eventuali errori a video
+  $("#error-list").html("");
+
 }
 
 // capitalizza il primo carattere
@@ -210,13 +181,13 @@ function isPoster(poster) {
   return isPoster = true;
 }
 // funzione che stampa a schermo messaggio d'errore
-function printNoResults(search) {
+function printNoResults(category) {
   var source = $("#no-results-template").html();
   var errorTemplate = Handlebars.compile(source);
   var context = {
-    "last_search": search,
+    "category": category
   };
   var html = errorTemplate(context);
-
+  $("#error-list").append(html);
 
 }

@@ -2,23 +2,25 @@
 var totalResults = {};
 var genresResults = {};
 var lastResult;
-var filterGenre = "Family";
+var allGenres = [];
+var filterGenre = "All";
 // inizio document ready
 $(document).ready(function(){
   // funzione cerca al click sul bottone
-  $(".search_button").click(function(){
-    // salvo il valore dell'input ricerca
-    var searchInput = $(".search_input").val();
-    lastResult = searchInput;
-    // controllo che la casella input non sia vuota
-    if (searchInput != "") {
-      // cancello il risultato precedente
-      resetResult();
-      // stampo a schermo il risultato
-      getIds("movie", searchInput);
-      getIds("tv", searchInput);
-    }
-  });
+  // $(".search_button").click(function(){
+  //   // salvo il valore dell'input ricerca
+  //   var searchInput = $(".search_input").val();
+  //   lastResult = searchInput;
+  //   // controllo che la casella input non sia vuota
+  //   if (searchInput != "") {
+  //     // cancello il risultato precedente
+  //     resetResult();
+  //     // stampo a schermo il risultato
+  //     getIds("movie", searchInput);
+  //     getIds("tv", searchInput);
+  //     $('#select_genre').prop('disabled', false);
+  //   }
+  // });
 
   // funzione cerca premendo invio
   $(".search_input").keyup(function(){
@@ -33,28 +35,15 @@ $(document).ready(function(){
         // stampo a schermo il risultato e salvo il valore della funzione
         getIds("movie", searchInput);
         getIds("tv", searchInput);
+        $('#select_genre').prop('disabled', false);
       }
     }
   });
 
-  // funzione che filtra il Genere
-  // $("#select_genre option").click(function () {
-  //   var genreSelect = $(this).val();
-  //   console.log(genreSelect);
-  //   filterGenre = genreSelect;
-  //   console.log(filterGenre);
-  //   console.log(lastResult);
-  //   resetResult();
-  //   getIds("movie", lastResult);
-  // });
-
-
+  // selezionare il genere
   $("#select_genre").change(function(){
     var genreSelect = $(this).val();
-    console.log(genreSelect);
     filterGenre = genreSelect;
-    console.log(filterGenre);
-    console.log(lastResult);
     resetResult();
     getIds("movie", lastResult);
 
@@ -108,19 +97,10 @@ function renderResults(type, obj) {
         "method":"GET",
         "success": function (details) {
 
-
-          var listgGen = details.genres;
-          var visible = "";
-          for (var i = 0; i < listgGen.length; i++) {
-            if (listgGen[i].name == filterGenre) {
-              visible = "filter_on";
-            }
-          }
-
           // compilo il context
           var context = {
             "id": details.id,
-            "filter_on": visible,
+            "filter_on": setFilterGenre(details),
             "type_label": jsUcfirst(type),
             "type_class": type,
             "title": details.name || details.title,
@@ -149,6 +129,7 @@ function renderResults(type, obj) {
     });
     // end call
   }
+
 }
 
 
@@ -198,15 +179,25 @@ function printStars(vote) {
 }
 
 // filtra per genere
-// function filterGenre(details) {
-//   var listgGen = details.genres;
-//   for (var i = 0; i < listgGen.length; i++) {
-//     if (listgGen[i].name == filterGenre) {
-//       return "filter_on";
-//     }
-//   }
-//   return "";
-// }
+function setFilterGenre(details) {
+  var visile = "";
+  if (filterGenre == "All") {
+    visile = "filter_on";
+  }
+  var listGen = details.genres;
+  var typeGenre;
+  for (var i = 0; i < listGen.length; i++) {
+    typeGenre = listGen[i].name;
+    if (typeGenre == filterGenre) {
+      visile = "filter_on";
+    }
+    // inserisci il valore in un array se presente scarta
+    if (!allGenres.includes(typeGenre)) {
+      allGenres.push(typeGenre);
+    }
+  }
+  return visile;
+}
 
 // resetto la casella di ricerca input
 function resetResult() {
@@ -216,6 +207,8 @@ function resetResult() {
   $("#results-list").html("");
   // resetto eventuali errori a video
   $("#error-list").html("");
+  // resetto la lista dei generi correlati alla ricerca prev
+  allGenres =[];
 }
 
 // capitalizza il primo carattere

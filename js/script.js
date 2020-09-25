@@ -90,7 +90,7 @@ function renderResults(type, obj) {
             "poster": details.poster_path,
             "star_vote": printStars(details.vote_average),
             "overview": details.overview,
-            "genre": ""
+            "genres": getGenres(details.genres)
           };
 
           //preparo il template e lo compilo con il context
@@ -187,4 +187,12 @@ function printNoResults(category) {
   };
   var html = errorTemplate(context);
   $("#error-list").append(html);
+}
+
+function getGenres(listGenres) {
+  var stringGenres = "";
+  for (var i = 0; i < listGenres.length; i++) {
+    stringGenres += listGenres[i].name + " ";
+  }
+  return stringGenres;
 }

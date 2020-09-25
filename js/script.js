@@ -12,7 +12,7 @@ $(document).ready(function(){
       resetResult();
       // stampo a schermo il risultato
       getIds("movie", searchInput);
-      // getIds("tv", searchInput);
+      getIds("tv", searchInput);
     }
   });
 
@@ -27,7 +27,7 @@ $(document).ready(function(){
         resetResult();
         // stampo a schermo il risultato e salvo il valore della funzione
         getIds("movie", searchInput);
-        // getIds("tv", searchInput);
+        getIds("tv", searchInput);
       }
     }
   });
@@ -68,14 +68,14 @@ function getIds(type, searchInput) {
 function renderResults(type, obj) {
 
   var results = obj.results;
-  var id;
+  var id, callType;
   // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
     id = results[i].id;
     // faccio unìaltra chiamata per ottenere i dettagli
     $.ajax(
       {
-        "url":"https://api.themoviedb.org/3/movie/"+id+"?api_key=faa82c855e9e700015c133bf3942bd8f",
+        "url":"https://api.themoviedb.org/3/"+type+"/"+id+"?api_key=faa82c855e9e700015c133bf3942bd8f",
         "method":"GET",
         "success": function (details) {
           // compilo il context

@@ -41,26 +41,49 @@ body{
 
 /* main */
 .results-container{
-  padding: 20px 0;
+  position: relative;
 }
 #results-list{
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: row;
+  flex-basis: 1;
   width: 100%;
+  margin: 30px 0;
   list-style: none;
+  overflow: hidden;
 }
 
+.scroll.display_none{
+  display: none;
+}
+.angles{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 30px;
+  padding: 20px;
+}
+.prev {
+  left: 0;
+}
+.next {
+  right: 0;
+}
 
 
 /* template */
 .result{
   display: none;
+  flex: none;
   position: relative;
-  width: 342px;
-  height: 513px;
-  margin: 20px;
+  width: 185px;
+  height: 278px;
+  margin: 0 20px;
+  border-radius: 5px;
   background-color: #000;
+  cursor: pointer;
+  overflow: hidden;
 }
 .result.filter_on{
   display: block;
@@ -70,7 +93,6 @@ body{
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 20px;
   overflow: hidden;
 }
 
@@ -88,28 +110,36 @@ body{
   right: 0;
   opacity: 1;
   transition: 0.6s;
-  pointer-events: none;
 }
 .result:hover .result_img{
   opacity: 0;
 }
+.result_img img{
+  width: 185px;
+  height: 278px;
+}
 .cover_no_poster{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 0;
   right: 0;
-  width: 342px;
-  height: 513px;
-  padding: 200px 25px;
+  width: 185px;
+  height: 278px;
+  padding: 0 15px;
   background-color: #000;
   text-align: center;
-  font-size: 30px;
+  font-size: 15px;
   background: #182933;
   background: -moz-radial-gradient(center, #182933 0%, #182933 0%, #000000 100%);
   background: -webkit-radial-gradient(center, #182933 0%, #182933 0%, #000000 100%);
-  background: radial-gradient(ellipse at center, #182933 0%, #182933 0%, #000000 100%);}
+  background: radial-gradient(ellipse at center, #182933 0%, #182933 0%, #000000 100%);
+}
 
+/* flag */
 .flag_img {
-  width: 20px;
+  width: 10px;
 }
 
 /* TEMPLATE STARS */
@@ -121,7 +151,7 @@ body{
   color: yellow;
 }
 
-/* type */
+/* type movio or tv */
 .type{
   margin: 10px 0;
 }

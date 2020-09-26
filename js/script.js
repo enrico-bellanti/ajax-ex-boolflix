@@ -4,6 +4,10 @@ var genresResults = {};
 var lastResult;
 var allGenres = [];
 var filterGenre = "All";
+
+scrollHorizontal($("#results-list"), $(".angles"));
+
+
 // inizio document ready
 $(document).ready(function(){
   // fare un reset sulla select filtro genre
@@ -124,7 +128,6 @@ function renderResults(type, obj) {
             "type_label": jsUcfirst(type),
             "type_class": type,
             "title": details.name || details.title,
-            "original_title": details.original_name || details.original_title,
             "original_language" : details.original_language,
             "vote_average": details.vote_average,
             "isPoster": isPoster(details.poster_path),
@@ -140,6 +143,7 @@ function renderResults(type, obj) {
           var template = Handlebars.compile(source);
           var html = template(context);
           $("#results-list").append(html);
+          showScroll();
 
 
         },
@@ -285,4 +289,26 @@ function renderCast(type, idResult) {
   });
   // end call
 
+}
+
+function scrollHorizontal(list, angle) {
+  var box = list;
+  var boxScroll;
+  angle.click(function() {
+    if ($(this).hasClass("next")) {
+      boxScroll = ((box.width() / 2)) + box.scrollLeft();
+      box.animate({
+        scrollLeft: boxScroll,
+      })
+    } else {
+      x = ((box.width() / 2)) - box.scrollLeft();
+      box.animate({
+        scrollLeft: -boxScroll,
+      })
+    }
+  })
+}
+
+function showScroll() {
+  $(".scroll").removeClass("display_none");
 }

@@ -33,9 +33,15 @@
       <ul id="results-list">
 
       </ul>
+      <div class="scroll display_none">
+        <div class="angles prev"><i class="fas fa-angle-left"></i></div>
+        <div class="angles next"><i class="fas fa-angle-right"></i></div>
+      </div>
+      <!-- lista errori -->
       <ul id="error-list">
 
       </ul>
+      <!-- lista errori -->
     </div>
   </main>
 
@@ -48,14 +54,15 @@
     <li class="result {{filter_on}}" data-id="{{id}}">
       <div class="result_img">
           {{#if isPoster}}
-            <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="">
+            <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
           {{else}}
-            <div class="cover_no_poster">{{title}}</div>
+            <div class="cover_no_poster">
+              <h4>{{title}}</h4>
+            </div>
           {{/if}}
       </div>
       <div class="result_info">
         <h1>{{title}}</h1>
-        <h4>Titolo originale: {{original_title}}</h4>
         <h4>Lingua originale: <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
         <p>Media dei voti: {{vote_average}}</p>
         <ul class="star_list">

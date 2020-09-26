@@ -6,6 +6,9 @@ var allGenres = [];
 var filterGenre = "All";
 // inizio document ready
 $(document).ready(function(){
+  // fare un reset sulla select filtro genre
+  $('#select_genre').val("Genere");
+  $('#select_genre').prop('disabled', true);
   // funzione cerca al click sul bottone
   // $(".search_button").click(function(){
   //   // salvo il valore dell'input ricerca
@@ -14,7 +17,7 @@ $(document).ready(function(){
   //   // controllo che la casella input non sia vuota
   //   if (searchInput != "") {
   //     // cancello il risultato precedente
-  //     resetResult();
+  //     resetResults();
   //     // stampo a schermo il risultato
   //     getIds("movie", searchInput);
   //     getIds("tv", searchInput);
@@ -31,11 +34,30 @@ $(document).ready(function(){
       lastResult = searchInput;
       if (searchInput != "") {
         // cancello il risultato precedente
-        resetResult();
+        resetResults();
         // stampo a schermo il risultato e salvo il valore della funzione
         getIds("movie", searchInput);
         getIds("tv", searchInput);
+
+        // funzione per renderizzare la select filtro e salvare i risultati in un array
+        // cicla l'array e prepara il template
+          var source = $("#option_genres-template").html();
+          var optionTemplate = Handlebars.compile(source);
+          console.log(allGenres);
+          for (var i = 0; i < allGenres.length; i++) {
+            console.log("ciao");
+            console.log(allGenres[i]);
+            var context ={
+              "value": allGenres[i]
+            };
+            var html = optionTemplate(context);
+            $("#select_genre").append(html);
+          }
+
+        // setta la select filtro genre
         $('#select_genre').prop('disabled', false);
+        $('#select_genre').val("All");
+
       }
     }
   });
@@ -44,8 +66,9 @@ $(document).ready(function(){
   $("#select_genre").change(function(){
     var genreSelect = $(this).val();
     filterGenre = genreSelect;
-    resetResult();
+    resetResults();
     getIds("movie", lastResult);
+    // getIds("tv", lastResult);
 
   });
 
@@ -114,8 +137,6 @@ function renderResults(type, obj) {
             "genres": getGenres(details.genres)
           };
 
-
-
           //preparo il template e lo compilo con il context
           var source = $("#result-template").html();
           var template = Handlebars.compile(source);
@@ -129,7 +150,7 @@ function renderResults(type, obj) {
     });
     // end call
   }
-
+  // STAMPA DA QUI LE OPTION PER I FILTRI
 }
 
 
@@ -191,7 +212,7 @@ function setFilterGenre(details) {
     if (typeGenre == filterGenre) {
       visile = "filter_on";
     }
-    // inserisci il valore in un array se presente scarta
+    // inserisci il valore in un array globale se presente scarta
     if (!allGenres.includes(typeGenre)) {
       allGenres.push(typeGenre);
     }
@@ -200,7 +221,7 @@ function setFilterGenre(details) {
 }
 
 // resetto la casella di ricerca input
-function resetResult() {
+function resetResults() {
   // resetto la casella input
   $(".search_input").val("");
   // resetto la ricerca

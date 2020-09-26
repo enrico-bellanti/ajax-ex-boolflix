@@ -17,12 +17,10 @@
       <div class="logo"><img src="img/boolflix_logo.png" alt="logo"></div>
       <div class="search_bar">
         <select id="select_genre" name="genre" disabled>
-          <option class="genre" value="">Genere</option>
+          <option class="genre" value="Genere">Genere</option>
           <option class="genre" value="All">All</option>
-          <option class="genre" value="Family">Action</option>
-          <option class="genre" value="Family">Family</option>
+          <option class="genre" value="Action">Action</option>
           <option class="genre" value="Comedy">Comedy</option>
-          <option class="genre" value="Adventure">Adventure</option>
         </select>
         <input class="search_input" type="text" name="" value="" placeholder="cerca film">
         <button class="search_button" type="button" name="button">Cerca</button>
@@ -97,7 +95,7 @@
   <!-- /template messaggio d'errore -->
 
   <!-- template select genre -->
-  <script id="entry-template" type="text/x-handlebars-template">
+  <script id="option_genres-template" type="text/x-handlebars-template">
     <option class="genre" value="{{value}}">{{value}}</option>
   </script>
   <!-- /template select genre -->

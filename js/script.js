@@ -141,6 +141,7 @@ function renderResults(type, obj) {
           var template = Handlebars.compile(source);
           var html = template(context);
           $("#results-list").append(html);
+          renderCast(type, id);
 
         },
         "error":function (err) {
@@ -264,4 +265,27 @@ function getGenres(listGenres) {
     stringGenres += listGenres[i].name + " ";
   }
   return stringGenres;
+}
+
+function renderCast(type, id) {
+  $.ajax(
+    {
+      "url":"https://api.themoviedb.org/3/"+type+"/"+id+"/credits?api_key=faa82c855e9e700015c133bf3942bd8f",
+      "method":"GET",
+      "success": function (data) {
+        var cast = "";
+        for (var i = 0; i < 4; i++) {
+          cast += data.cast[i].name + " ";
+        }
+        console.log(id);
+
+        $(".result[data-id="+id+"] .cast").text(cast);
+
+      },
+      "error":function (err) {
+        alert("E avvenuto un errore. "+ err);
+      }
+  });
+  // end call
+
 }

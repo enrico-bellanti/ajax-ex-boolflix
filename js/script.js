@@ -43,10 +43,8 @@ $(document).ready(function(){
         // cicla l'array e prepara il template
           var source = $("#option_genres-template").html();
           var optionTemplate = Handlebars.compile(source);
-          console.log(allGenres);
+
           for (var i = 0; i < allGenres.length; i++) {
-            console.log("ciao");
-            console.log(allGenres[i]);
             var context ={
               "value": allGenres[i]
             };
@@ -108,14 +106,14 @@ function getIds(type, searchInput) {
 function renderResults(type, obj) {
 
   var results = obj.results;
-  var id;
+  var idResult;
   // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
-    id = results[i].id;
+    idResult = results[i].id;
     // faccio unìaltra chiamata per ottenere i dettagli
     $.ajax(
       {
-        "url":"https://api.themoviedb.org/3/"+type+"/"+id+"?api_key=faa82c855e9e700015c133bf3942bd8f",
+        "url":"https://api.themoviedb.org/3/"+type+"/"+idResult+"?api_key=faa82c855e9e700015c133bf3942bd8f",
         "method":"GET",
         "success": function (details) {
 
@@ -133,7 +131,8 @@ function renderResults(type, obj) {
             "poster": details.poster_path,
             "star_vote": printStars(details.vote_average),
             "overview": details.overview,
-            "genres": getGenres(details.genres)
+            "genres": getGenres(details.genres),
+            "cast": renderCast(type, idResult)
           };
 
           //preparo il template e lo compilo con il context
@@ -141,7 +140,7 @@ function renderResults(type, obj) {
           var template = Handlebars.compile(source);
           var html = template(context);
           $("#results-list").append(html);
-          renderCast(type, id);
+
 
         },
         "error":function (err) {
@@ -267,19 +266,17 @@ function getGenres(listGenres) {
   return stringGenres;
 }
 
-function renderCast(type, id) {
+function renderCast(type, idResult) {
   $.ajax(
     {
-      "url":"https://api.themoviedb.org/3/"+type+"/"+id+"/credits?api_key=faa82c855e9e700015c133bf3942bd8f",
+      "url":"https://api.themoviedb.org/3/"+type+"/"+idResult+"/credits?api_key=faa82c855e9e700015c133bf3942bd8f",
       "method":"GET",
       "success": function (data) {
         var cast = "";
         for (var i = 0; i < 4; i++) {
           cast += data.cast[i].name + " ";
         }
-        console.log(id);
-
-        $(".result[data-id="+id+"] .cast").text(cast);
+        return cast;
 
       },
       "error":function (err) {

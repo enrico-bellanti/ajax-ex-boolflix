@@ -69,7 +69,6 @@ $(document).ready(function(){
     resetResults();
     getIds("movie", lastResult);
     // getIds("tv", lastResult);
-
   });
 
 });
@@ -255,6 +254,8 @@ function printNoResults(category) {
   };
   var html = errorTemplate(context);
   $("#error-list").append(html);
+  totalResults.movie = "";
+  totalResults.tv = "";
 }
 
 function getGenres(listGenres) {

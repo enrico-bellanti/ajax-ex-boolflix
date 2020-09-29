@@ -1,18 +1,14 @@
 // variabili globali
 var totalResults = {};
-var genresResults = {};
-var lastResult;
-var allGenres = [];
-var filterGenre = "All";
-
-scrollHorizontal($("#results-list"), $(".angles"));
-
+var listGenres = [];
+var lastSearch;
 
 // inizio document ready
 $(document).ready(function(){
   // fare un reset sulla select filtro genre
-  $('#select_genre').val("Genere");
+  $('#select_genre').val("0");
   $('#select_genre').prop('disabled', true);
+  replaceFilterDefault();
   // funzione cerca al click sul bottone
   // $(".search_button").click(function(){
   //   // salvo il valore dell'input ricerca
@@ -35,43 +31,36 @@ $(document).ready(function(){
     if(event.which == 13){
       // salvo il valore dell'input ricerca
       var searchInput = $(".search_input").val();
-      lastResult = searchInput;
       if (searchInput != "") {
+        lastSearch = searchInput;
         // cancello il risultato precedente
         resetResults();
         // stampo a schermo il risultato e salvo il valore della funzione
         getIds("movie", searchInput);
         getIds("tv", searchInput);
 
-        // funzione per renderizzare la select filtro e salvare i risultati in un array
-        // cicla l'array e prepara il template
-          var source = $("#option_genres-template").html();
-          var optionTemplate = Handlebars.compile(source);
-
-          for (var i = 0; i < allGenres.length; i++) {
-            var context ={
-              "value": allGenres[i]
-            };
-            var html = optionTemplate(context);
-            $("#select_genre").append(html);
-          }
-
         // setta la select filtro genre
         $('#select_genre').prop('disabled', false);
-        $('#select_genre').val("All");
+        $('#select_genre').val("0");
+
 
       }
     }
   });
 
-  // selezionare il genere
-  $("#select_genre").change(function(){
-    var genreSelect = $(this).val();
-    filterGenre = genreSelect;
+  $("#select_genre").change(function () {
+    // cancello il risultato precedente
     resetResults();
-    getIds("movie", lastResult);
-    // getIds("tv", lastResult);
+    // stampo a schermo il risultato e salvo il valore della funzione
+    getIds("movie", lastSearch);
+    getIds("tv", lastSearch);
+
   });
+
+  // funzioni per lo scroll delle row_results
+  scrollHorizontal($(".cards-list"), $(".angles"));
+  // scrollHorizontal($("cards-list-serie"), $(".angles_serie"));
+
 
 });
 // end document ready
@@ -92,8 +81,8 @@ function getIds(type, searchInput) {
         totalResults[type] = obj.total_results;
         // controllo su i risultati
         if (totalResults.movie === 0 && totalResults.tv === 0) {
-          printNoResults(type);
-        } else {
+          printNoResults();
+        } else if (obj.total_results != 0) {
           renderResults(type, obj);
         }
 
@@ -108,44 +97,48 @@ function getIds(type, searchInput) {
 
 // renderizza il template del film
 function renderResults(type, obj) {
+  // copia e compila il template della row e appendila nel html
+  var source = $("#row-results-template").html();
+  var rowTemplate = Handlebars.compile(source);
+  context = {
+    "type": type,
+    "type_label": jsUcfirst(type)
+  }
+  var html = rowTemplate(context);
+  $("#container_results").append(html);
 
+  // ricavo i risultati dall'oggetto scaricato e salvo in una variabile
   var results = obj.results;
-  var idResult;
   // ciclo l'array della risposta
   for(var i = 0; i < results.length; i++){
-    idResult = results[i].id;
-    // faccio unìaltra chiamata per ottenere i dettagli
+      // faccio unìaltra chiamata per ottenere i dettagli
     $.ajax(
       {
-        "url":"https://api.themoviedb.org/3/"+type+"/"+idResult+"?api_key=faa82c855e9e700015c133bf3942bd8f",
+        "url":"https://api.themoviedb.org/3/"+type+"/"+results[i].id+"?api_key=faa82c855e9e700015c133bf3942bd8f",
         "method":"GET",
         "success": function (details) {
+          // inserire qui il controllo su array genres
+          if (displayOnByGenre(details.genres)) {
+            // compilo il context
+            var context = {
+              "id": details.id,
+              "isPoster": isPoster(details.poster_path),
+              "poster": details.poster_path,
+              "title": details.name || details.title,
+              "type_class": type,
+              "type_label": jsUcfirst(type),
+              "star_vote": printStars(details.vote_average),
+              "original_language" : details.original_language,
+              "genres": getStringGenres(details.genres)
+            };
 
-          // compilo il context
-          var context = {
-            "id": details.id,
-            "filter_on": setFilterGenre(details),
-            "type_label": jsUcfirst(type),
-            "type_class": type,
-            "title": details.name || details.title,
-            "original_language" : details.original_language,
-            "vote_average": details.vote_average,
-            "isPoster": isPoster(details.poster_path),
-            "poster": details.poster_path,
-            "star_vote": printStars(details.vote_average),
-            "overview": details.overview,
-            "genres": getGenres(details.genres),
-            "cast": renderCast(type, idResult)
-          };
-
-          //preparo il template e lo compilo con il context
-          var source = $("#result-template").html();
-          var template = Handlebars.compile(source);
-          var html = template(context);
-          $("#results-list").append(html);
-          showScroll();
-
-
+            //preparo il template e lo compilo con il context
+            var source = $("#cards-template").html();
+            var template = Handlebars.compile(source);
+            var html = template(context);
+            $(".cards-list-"+type+"").append(html);
+            getStringCast(type, details.id);
+          }
         },
         "error":function (err) {
           alert("E avvenuto un errore. "+ err);
@@ -153,7 +146,6 @@ function renderResults(type, obj) {
     });
     // end call
   }
-  // STAMPA DA QUI LE OPTION PER I FILTRI
 }
 
 
@@ -202,37 +194,14 @@ function printStars(vote) {
   return htmlStars;
 }
 
-// filtra per genere
-function setFilterGenre(details) {
-  var visile = "";
-  if (filterGenre == "All") {
-    visile = "filter_on";
-  }
-  var listGen = details.genres;
-  var typeGenre;
-  for (var i = 0; i < listGen.length; i++) {
-    typeGenre = listGen[i].name;
-    if (typeGenre == filterGenre) {
-      visile = "filter_on";
-    }
-    // inserisci il valore in un array globale se presente scarta
-    if (!allGenres.includes(typeGenre)) {
-      allGenres.push(typeGenre);
-    }
-  }
-  return visile;
-}
 
 // resetto la casella di ricerca input
 function resetResults() {
+  listGenres = [];
   // resetto la casella input
   $(".search_input").val("");
   // resetto la ricerca
-  $("#results-list").html("");
-  // resetto eventuali errori a video
-  $("#error-list").html("");
-  // resetto la lista dei generi correlati alla ricerca prev
-  allGenres =[];
+  $("#container_results").html("");
 }
 
 // capitalizza il primo carattere
@@ -253,44 +222,16 @@ function isPoster(poster) {
 function printNoResults(category) {
   var source = $("#no-results-template").html();
   var errorTemplate = Handlebars.compile(source);
-  var context = {
-    "category": category
-  };
+  var context = "";
   var html = errorTemplate(context);
-  $("#error-list").append(html);
+  $("#container_results").append(html);
   totalResults.movie = "";
   totalResults.tv = "";
 }
 
-function getGenres(listGenres) {
-  var stringGenres = "";
-  for (var i = 0; i < listGenres.length; i++) {
-    stringGenres += listGenres[i].name + " ";
-  }
-  return stringGenres;
-}
 
-function renderCast(type, idResult) {
-  $.ajax(
-    {
-      "url":"https://api.themoviedb.org/3/"+type+"/"+idResult+"/credits?api_key=faa82c855e9e700015c133bf3942bd8f",
-      "method":"GET",
-      "success": function (data) {
-        var cast = "";
-        for (var i = 0; i < 4; i++) {
-          cast += data.cast[i].name + " ";
-        }
-        return cast;
 
-      },
-      "error":function (err) {
-        alert("E avvenuto un errore. "+ err);
-      }
-  });
-  // end call
-
-}
-
+// funzione per scrollare con angles orizzontalmente
 function scrollHorizontal(list, angle) {
   var box = list;
   var boxScroll;
@@ -309,6 +250,85 @@ function scrollHorizontal(list, angle) {
   })
 }
 
-function showScroll() {
-  $(".scroll").removeClass("display_none");
+// funzione per ottenere i primi 5 del cast
+function getStringCast(type, idResult) {
+  $.ajax(
+    {
+      "url":"https://api.themoviedb.org/3/"+type+"/"+idResult+"/credits?api_key=faa82c855e9e700015c133bf3942bd8f",
+      "method":"GET",
+      "success": function (data) {
+        if (data.cast.length > 0) {
+          var cast = "";
+          for (var i = 1; i < 6; i++) {
+            if (data.cast[i] != undefined) {
+              cast += data.cast[i].name + " ";
+            }
+          }
+          $(".cards-list-"+type+" .result[data-id="+idResult+"] .cast").append(cast);
+        } else {
+          $(".cards-list-"+type+" .result[data-id="+idResult+"] .cast").hide();
+        }
+      },
+      "error":function (err) {
+        alert("E avvenuto un errore. "+ err);
+      }
+  })
+}
+
+// funzione per inserire generi nell'array globale
+function pushGenre(genre) {
+  var newListGenres;
+  if (!listGenres.includes(genre)) {
+    listGenres.push(genre);
+    listGenres.sort();
+    renderFilterSelect(listGenres);
+  }
+}
+
+// funzione per impostare lista filtri nella select
+function renderFilterSelect(list) {
+  // cancello la lista stampata precedentemente
+  $("#select_genre").html("");
+  replaceFilterDefault();
+  // copio il template della option
+  var source = $("#option-genres-template").html();
+  var optionTemplate = Handlebars.compile(source);
+
+  for (var i = 0; i < list.length; i++) {
+    var context = {
+      "value": list[i]
+    }
+    var html = optionTemplate(context);
+    $("#select_genre").append(html);
+  }
+}
+
+// funzione che unisce stringhe con spazio
+function getStringGenres(list) {
+  var arrayGenres = [];
+  for (var i = 0; i < list.length; i++) {
+    // inserisci genre nella lista
+    pushGenre(list[i].name);
+    arrayGenres.push(list[i].name);
+  }
+  return arrayGenres;
+}
+
+function replaceFilterDefault() {
+  var source = $("#option-genres-default-template").html();
+  var optionTemplate = Handlebars.compile(source);
+  var html = optionTemplate();
+  $("#select_genre").append(html);
+}
+
+function displayOnByGenre(list) {
+  var genreOn = $("#select_genre").val();
+  if (genreOn == 0) {
+    return true;
+  }
+  for (var i = 0; i < list.length; i++) {
+    if (list[i].name == genreOn) {
+      return true;
+    }
+  }
 }

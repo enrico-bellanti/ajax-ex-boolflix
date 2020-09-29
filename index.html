@@ -17,10 +17,6 @@
       <div class="logo"><img src="img/boolflix_logo.png" alt="logo"></div>
       <div class="search_bar">
         <select id="select_genre" name="genre" disabled>
-          <option class="genre" value="Genere">Genere</option>
-          <option class="genre" value="All">All</option>
-          <option class="genre" value="Action">Action</option>
-          <option class="genre" value="Comedy">Comedy</option>
         </select>
         <input class="search_input" type="text" name="" value="" placeholder="cerca film">
         <button class="search_button" type="button" name="button">Cerca</button>
@@ -29,53 +25,60 @@
   </header>
   <!-- /searchbar -->
   <main>
-    <div class="results-container">
-      <ul id="results-list">
+    <div class="jumbo"></div>
+    <div id="container_results">
 
-      </ul>
-      <div class="scroll display_none">
-        <div class="angles prev"><i class="fas fa-angle-left"></i></div>
-        <div class="angles next"><i class="fas fa-angle-right"></i></div>
-      </div>
-      <!-- lista errori -->
-      <ul id="error-list">
-
-      </ul>
-      <!-- lista errori -->
     </div>
   </main>
+
+  <footer></footer>
 
 
 
   <!-- TEMPLATES -->
 
-  <!-- template film -->
-  <script id="result-template" type="text/x-handlebars-template">
-    <li class="result {{filter_on}}" data-id="{{id}}">
-      <div class="result_img">
-          {{#if isPoster}}
-            <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
-          {{else}}
-            <div class="cover_no_poster">
-              <h4>{{title}}</h4>
-            </div>
-          {{/if}}
+  <!-- template row results container -->
+  <script id="row-results-template" type="text/x-handlebars-template">
+    <h2 class="type_label">{{type_label}}</h2>
+    <div class="row_results">
+      <ul class="cards-list cards-list-{{type}}">
+
+      </ul>
+      <div class="scroll">
+        <div class="angles angles_{{type}}  prev"><i class="fas fa-angle-left"></i></div>
+        <div class="angles angles_{{type}} next"><i class="fas fa-angle-right"></i></div>
       </div>
-      <div class="result_info">
-        <h1>{{title}}</h1>
-        <h4>Lingua originale: <img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
-        <p>Media dei voti: {{vote_average}}</p>
-        <ul class="star_list">
-          {{{star_vote}}}
-        </ul>
-        <h4 class="type {{type_class}}">{{type_label}}</h4>
-        <p class="overview">{{overview}}</p>
-        <p class="genres">Genere: {{genres}}</p>
-        <p class="cast">Cast: {{cast}}</p>
+    </div>
+  </script>
+  <!-- /template row results container -->
+
+  <!-- template card -->
+  <script id="cards-template" type="text/x-handlebars-template">
+    <li class="result" data-id="{{id}}">
+      <div class="card">
+        <div class="result_img">
+            {{#if isPoster}}
+              <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
+            {{else}}
+              <div class="cover_no_poster">
+                <h4>{{title}}</h4>
+              </div>
+            {{/if}}
+        </div>
+        <div class="result_text">
+          <h5 class="type {{type_class}}">{{type_label}}</h5>
+          <h1>{{title}}</h1>
+          <ul class="star_list">
+            {{{star_vote}}}
+          </ul>
+          <h4 class="original_lang"><strong>Lingua originale: </strong><img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
+          <p class="genres"><strong>Genere: </strong>{{genres}}</p>
+          <p class="cast"><strong>Cast: </strong></p>
+        </div>
       </div>
     </li>
   </script>
-  <!-- /template film -->
+  <!-- /template card -->
 
   <!-- template stelle -->
   <script id="stars-template" type="text/x-handlebars-template">
@@ -87,24 +90,35 @@
 
   <!-- template messaggio d'errore -->
   <script id="no-results-template" type="text/x-handlebars-template">
-      <li class="no_results">
-        <div class="no_result_text">
-          <p>Nessun risultato nella sezione {{category}} per la tua ricerca.</p>
-          <p>Suggerimenti:</p>
-          <ul class="list_solutions">
-            <li>Prova con parole chiave diverse</li>
-            <li>Cerchi un film o un programma TV?</li>
-            <li>Prova a usare il titolo di un film o programma TV oppure il nome di un attore o di un regista</li>
-            <li>Prova con un genere, per esempio Commedia, Romantici, Sport o Dramma</li>
-          </ul>
-        </div>
-      </li>
+    <div class="row_errors">
+      <ul class="error-list">
+        <li class="no_results">
+          <div class="no_result_text">
+            <p>Nessun risultato nella sezione {{category}} per la tua ricerca.</p>
+            <p>Suggerimenti:</p>
+            <ul class="list_solutions">
+              <li>Prova con parole chiave diverse</li>
+              <li>Cerchi un film o un programma TV?</li>
+              <li>Prova a usare il titolo di un film o programma TV oppure il nome di un attore o di un regista</li>
+              <li>Prova con un genere, per esempio Commedia, Romantici, Sport o Dramma</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
    </script>
   <!-- /template messaggio d'errore -->
 
   <!-- template select genre -->
-  <script id="option_genres-template" type="text/x-handlebars-template">
+  <script id="option-genres-template" type="text/x-handlebars-template">
     <option class="genre" value="{{value}}">{{value}}</option>
+  </script>
+  <!-- /template select genre -->
+
+  <!-- template select default-genre -->
+  <script id="option-genres-default-template" type="text/x-handlebars-template">
+    <option class="genre" value="0">Selezione il genere</option>
+    <option class="genre" value="0">All</option>
   </script>
   <!-- /template select genre -->
 

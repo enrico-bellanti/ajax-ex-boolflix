@@ -5,25 +5,11 @@ var lastSearch;
 
 // inizio document ready
 $(document).ready(function(){
-  // fare un reset sulla select filtro genre
+  // azioni di default
   $('#select_genre').val("0");
   $('#select_genre').prop('disabled', true);
   replaceFilterDefault();
-  // funzione cerca al click sul bottone
-  // $(".search_button").click(function(){
-  //   // salvo il valore dell'input ricerca
-  //   var searchInput = $(".search_input").val();
-  //   lastResult = searchInput;
-  //   // controllo che la casella input non sia vuota
-  //   if (searchInput != "") {
-  //     // cancello il risultato precedente
-  //     resetResults();
-  //     // stampo a schermo il risultato
-  //     getIds("movie", searchInput);
-  //     getIds("tv", searchInput);
-  //     $('#select_genre').prop('disabled', false);
-  //   }
-  // });
+
 
   // funzione cerca premendo invio
   $(".search_input").keyup(function(){
@@ -302,7 +288,7 @@ function renderFilterSelect(list) {
     $("#select_genre").append(html);
   }
 }
-
+// DA RIVEDEDRE COME APPENDERE I GENRI
 // funzione che unisce stringhe con spazio
 function getStringGenres(list) {
   var arrayGenres = [];

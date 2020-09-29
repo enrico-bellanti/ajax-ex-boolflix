@@ -44,18 +44,15 @@ body{
 /* MAIN */
 
 /* TEMPLATE results conainer */
-#container_results{
-  padding: 25px;
-}
 .row_results{
   position: relative;
   margin-bottom: 20px;
 }
 .cards-list{
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  /* overflow:hidden; */
   list-style: none;
+  background-color: red;
 }
 .type_label{
   text-align: left;
@@ -74,11 +71,11 @@ body{
   z-index: 2;
 }
 .prev {
-  left: -25px;
+  left: 0;
 }
 
 .next {
-  right: -25px;
+  right: 0;
   justify-content: flex-end;
 }
 
@@ -91,7 +88,7 @@ body{
 }
 .angles i.fa-angle-left{
   position: relative;
-  left: -55px;
+  left: -15px;
   transition: 1s;
 }
 .prev:hover i.fa-angle-left{
@@ -99,7 +96,7 @@ body{
 }
 .angles i.fa-angle-right{
   position: relative;
-  right: -55px;
+  right: -15px;
   transition: 1s;
 }
 .next:hover i.fa-angle-right{
@@ -142,7 +139,7 @@ body{
   height: 278px;
 }
 .result_img img, .cover_no_poster{
-  object-fit: cover;
+  width: 100%;
   border-radius: 5px;
 }
 .cover_no_poster{
@@ -166,7 +163,7 @@ body{
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  max-width: 185px;
   padding: 0px 5px 5px 5px;
 }
 /* type*/
@@ -207,7 +204,11 @@ body{
 .original_lang, .genres, .cast{
   font-size: 10px;
   font-weight: lighter;
+  word-break: break-word;
 }
+/* .genres{
+  word-wrap:
+} */
 .flag_img {
   width: 15px;
 }

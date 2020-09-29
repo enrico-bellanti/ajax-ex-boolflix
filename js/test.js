@@ -1,21 +1,23 @@
+$(document).ready(function() {
+  scrollHorizontal($(".cards-list"), $(".angles"));
+});
 
-  // filtra per genere
-  function setFilterGenre(details) {
-    var visile = "";
-    if (filterGenre == "All") {
-      visile = "filter_on";
+
+// funzione per scrollare con angles orizzontalmente
+function scrollHorizontal(list, angle) {
+  var box = list;
+  var boxScroll;
+  angle.click(function() {
+    if ($(this).hasClass("next")) {
+      boxScroll = ((box.width() / 2)) + box.scrollLeft();
+      box.animate({
+        scrollLeft: boxScroll,
+      })
+    } else {
+      x = ((box.width() / 2)) - box.scrollLeft();
+      box.animate({
+        scrollLeft: -boxScroll,
+      })
     }
-    var listGen = details.genres;
-    var typeGenre;
-    for (var i = 0; i < listGen.length; i++) {
-      typeGenre = listGen[i].name;
-      if (typeGenre == filterGenre) {
-        visile = "filter_on";
-      }
-      // inserisci il valore in un array globale se presente scarta
-      if (!allGenres.includes(typeGenre)) {
-        allGenres.push(typeGenre);
-      }
-    }
-    return visile;
-  }
+  })
+}

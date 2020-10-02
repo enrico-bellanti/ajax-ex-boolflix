@@ -43,9 +43,18 @@ $(document).ready(function(){
 
   });
 
-  // funzioni per lo scroll delle row_results
-  scrollHorizontal($(".cards-list"), $(".angles"));
-  // scrollHorizontal($("cards-list-serie"), $(".angles_serie"));
+  // funzioni per lo scroll orizontale
+  $(document).on( "click", ".angles", function() {
+    if ($(this).hasClass("next")) {
+      var firstElementList = $(this).parents(".row_results").find(".result:first-child").clone();
+      $(this).parents(".row_results").find(".result:first-child").remove();
+      $(this).parents(".row_results").find(".cards-list").append(firstElementList);
+    } else if ($(this).hasClass("prev")) {
+      var lastElementList = $(this).parents(".row_results").find(".result:last-child").clone();
+      $(this).parents(".row_results").find(".result:last-child").remove();
+      $(this).parents(".row_results").find(".cards-list").prepend(lastElementList);
+    }
+  });
 
 
 });
@@ -216,25 +225,6 @@ function printNoResults(category) {
 }
 
 
-
-// funzione per scrollare con angles orizzontalmente
-function scrollHorizontal(list, angle) {
-  var box = list;
-  var boxScroll;
-  angle.click(function() {
-    if ($(this).hasClass("next")) {
-      boxScroll = ((box.width() / 2)) + box.scrollLeft();
-      box.animate({
-        scrollLeft: boxScroll,
-      })
-    } else {
-      x = ((box.width() / 2)) - box.scrollLeft();
-      box.animate({
-        scrollLeft: -boxScroll,
-      })
-    }
-  })
-}
 
 // funzione per ottenere i primi 5 del cast
 function getStringCast(type, idResult) {

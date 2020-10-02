@@ -1,0 +1,16 @@
+.cards-list{
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  background-color: red;
+}
+
+.result{
+  flex: none;
+  position: relative;
+  width: 185px;
+  min-height: 278px;
+  margin: 0 5px;
+  border-radius: 5px;
+  overflow: hidden;
+}

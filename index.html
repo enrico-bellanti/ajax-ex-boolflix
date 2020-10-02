@@ -27,7 +27,7 @@
   <main>
     <div class="jumbo"></div>
     <div id="container_results">
-      
+
     </div>
   </main>
 
@@ -56,25 +56,25 @@
   <script id="cards-template" type="text/x-handlebars-template">
     <li class="result" data-id="{{id}}">
       <div class="card">
-        <div class="result_img">
+          <div class="result_img">
             {{#if isPoster}}
-              <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
+            <img src="https://image.tmdb.org/t/p/w185{{poster}}" alt="">
             {{else}}
-              <div class="cover_no_poster">
-                <h4>{{title}}</h4>
-              </div>
+            <div class="cover_no_poster">
+              <h4>{{title}}</h4>
+            </div>
             {{/if}}
-        </div>
-        <div class="result_text">
-          <h5 class="type {{type_class}}">{{type_label}}</h5>
-          <h1>{{title}}</h1>
-          <ul class="star_list">
-            {{{star_vote}}}
-          </ul>
-          <h4 class="original_lang"><strong>Lingua originale: </strong><img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
-          <p class="genres"><strong>Genere: </strong>{{genres}}</p>
-          <p class="cast"><strong>Cast: </strong></p>
-        </div>
+          </div>
+          <div class="result_text">
+            <h5 class="type {{type_class}}">{{type_label}}</h5>
+            <h1>{{title}}</h1>
+            <ul class="star_list">
+              {{{star_vote}}}
+            </ul>
+            <h4 class="original_lang"><strong>Lingua originale: </strong><img class="flag_img" src="https://www.unknown.nu/flags/images/{{original_language}}-100"></h4>
+            <p class="genres"><strong>Genere: </strong>{{genres}}</p>
+            <p class="cast"><strong>Cast: </strong></p>
+          </div>
       </div>
     </li>
   </script>

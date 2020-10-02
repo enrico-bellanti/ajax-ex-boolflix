@@ -1,6 +1,7 @@
-$(document).ready(function() {
+// FUNZIONE PER LO SCROLL ORIZZIONATALE
 
 
+function scrollHorizontal(container, list, elements, angles) {
   $(document).on( "click", ".angles", function() {
     if ($(this).hasClass("next")) {
       var firstElementList = $(this).parents(".row_results").find(".result:first-child").clone();
@@ -12,6 +13,4 @@ $(document).ready(function() {
       $(this).parents(".row_results").find(".cards-list").prepend(lastElementList);
     }
   });
-
-
-});
+}

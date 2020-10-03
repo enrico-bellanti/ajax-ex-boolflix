@@ -10,6 +10,11 @@ $(document).ready(function(){
   $('#select_genre').prop('disabled', true);
   replaceFilterDefault();
 
+  // funzione che si attiva allo scroll
+  $(document).scroll(function() {
+    $(".header_container").addClass("scrolled");
+  });
+
 
   // funzione cerca premendo invio
   $(".search_input").keyup(function(){
@@ -24,6 +29,7 @@ $(document).ready(function(){
         // stampo a schermo il risultato e salvo il valore della funzione
         getIds("movie", searchInput);
         getIds("tv", searchInput);
+
 
         // setta la select filtro genre
         $('#select_genre').prop('disabled', false);
@@ -61,6 +67,7 @@ $(document).ready(function(){
 // end document ready
 
 function getIds(type, searchInput) {
+
   var urlCall = "https://api.themoviedb.org/3/search/" + type;
   // chiamata oer la ricerca films
   $.ajax(
@@ -114,6 +121,7 @@ function renderResults(type, obj) {
         "success": function (details) {
           // inserire qui il controllo su array genres
           if (displayOnByGenre(details.genres)) {
+
             // compilo il context
             var context = {
               "id": details.id,
@@ -142,6 +150,7 @@ function renderResults(type, obj) {
     // end call
   }
 }
+
 
 
 // funzione che converte voto in 5 stelline
@@ -278,7 +287,7 @@ function renderFilterSelect(list) {
     $("#select_genre").append(html);
   }
 }
-// DA RIVEDEDRE COME APPENDERE I GENRI
+
 // funzione che unisce stringhe con spazio
 function getStringGenres(list) {
   var arrayGenres = [];
